@@ -1,4 +1,4 @@
-# Red Bucket
+# Red Instance
 
 ## [![Red EC2 Module](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml/badge.svg?branch=main)](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml)
 
