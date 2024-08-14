@@ -1,3 +1,4 @@
+# Required Variables
 variable "project_name" {
   description = "Set the project name."
   type        = string
@@ -18,5 +19,23 @@ variable "create_resources" {
 
 variable "ami" {
   description = "The AMI to use for the instance"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "The instance type to use for the instance"
+  type        = string
+  default     = "t2.micro"
+}
+
+# Optional Variables
+variable "additional_tags" {
+  description = "Additional tags to apply to the resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "sg_name" {
+  description = "The name of the security group"
   type        = string
 }

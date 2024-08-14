@@ -12,8 +12,7 @@ provider "aws" {
 }
 
 resource "aws_security_group" "allow_ssh" {
-  count  = var.create_resources ? 1 : 0
-  vpc_id = aws_vpc.main[0].id
+  vpc_id = aws_vpc.main.id
 
   ingress {
     from_port   = 22
@@ -29,19 +28,30 @@ resource "aws_security_group" "allow_ssh" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "allow-ssh"
-  }
+  tags = merge(
+    {
+      Name = "${var.project_name}-Red-Instance"
+      Function = var.sg_name
+    },
+    var.additional_tags,
+  )
 }
 
 resource "aws_instance" "red-instance" {
-  count           = var.create_resources ? 1 : 0
-  ami             = ""
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.public[0].id
-  security_groups = [aws_security_group.allow_ssh[0].name]
+  ami             = var.ami
+  instance_type   = var.instance_type
+  subnet_id       = aws_subnet.public.id
+  security_groups = [aws_security_group.allow_ssh.name]
 
-  tags = {
-    Name = "web-instance"
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
   }
+
+  tags = merge(
+    {
+      Name = "${var.project_name}-Red-Instance"
+    },
+    var.additional_tags,
+  )
 }
