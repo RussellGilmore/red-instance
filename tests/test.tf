@@ -13,4 +13,5 @@ module "red-instance" {
 
   project_name = var.project_name
   region       = var.region
+
 }

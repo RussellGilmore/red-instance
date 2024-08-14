@@ -2,30 +2,21 @@
 variable "project_name" {
   description = "Set the project name."
   type        = string
-  default     = "red-test"
 }
 
 variable "region" {
   description = "Set the appropriate AWS region."
   type        = string
-  default     = "us-east-1"
 }
 
 variable "create_resources" {
   description = "Controls whether resources should be created"
   type        = bool
-  default     = true
 }
 
-variable "ami" {
-  description = "The AMI to use for the instance"
+variable "sg_name" {
+  description = "The name of the security group"
   type        = string
-}
-
-variable "instance_type" {
-  description = "The instance type to use for the instance"
-  type        = string
-  default     = "t2.micro"
 }
 
 # Optional Variables
@@ -35,7 +26,20 @@ variable "additional_tags" {
   default     = {}
 }
 
-variable "sg_name" {
-  description = "The name of the security group"
+variable "instance_type" {
+  description = "The instance type to use for the instance"
   type        = string
+  default     = "t2.micro"
+}
+
+variable "ami_name" {
+  description = "The name of the AMI to use for the instance"
+  type        = string
+  default = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20240701.1"
+}
+
+variable "ami_owner" {
+  description = "The owner of the AMI to use for the instance"
+  type        = string
+  default = "099720109477"
 }

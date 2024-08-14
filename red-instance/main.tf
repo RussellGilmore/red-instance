@@ -11,6 +11,23 @@ provider "aws" {
   }
 }
 
+# Data source to get the Red Instance AMI
+data "aws_ami" "red_ami" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = [var.ami_name]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = [var.ami_owner] # Canonical
+}
+
 resource "aws_security_group" "allow_ssh" {
   vpc_id = aws_vpc.main.id
 
@@ -38,7 +55,7 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_instance" "red-instance" {
-  ami             = var.ami
+  ami             = data.aws_ami.red_ami.id
   instance_type   = var.instance_type
   subnet_id       = aws_subnet.public.id
   security_groups = [aws_security_group.allow_ssh.name]
