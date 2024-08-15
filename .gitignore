@@ -75,3 +75,13 @@ go.work
 ############# Module #############
 # Ignore all files in the site directory
 site/*
+
+############### Module #############
+# Ignore all files in the site directory
+site/*
+
+############### Keys #############
+# Ignore public and private key files
+*.pub
+*.pem
+*.key
