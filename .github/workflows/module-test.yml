@@ -1,5 +1,5 @@
-# Red Bucket Module Testing Workflow
-name: Testing Red Bucket Module
+# Red Instance Module Testing Workflow
+name: Testing Red Instance Module
 on:
   push:
     branches: ["main"]

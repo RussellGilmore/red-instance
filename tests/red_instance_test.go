@@ -36,8 +36,8 @@ func deployTerraform(t *testing.T) {
 	}
 }
 
-// Test the red bucket terraform module
-func TestRedBucket(t *testing.T) {
+// Test the Red Instance terraform module
+func TestRedInstance(t *testing.T) {
 	defer test_structure.RunTestStage(t, "terraform_destroy", func() {
 		destroyTerraform(t)
 	})
