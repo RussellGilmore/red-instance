@@ -47,7 +47,7 @@ resource "aws_security_group" "allow_ssh" {
 
   tags = merge(
     {
-      Name = "${var.project_name}-Red-Instance"
+      Name     = "${var.project_name}-Red-Instance"
       Function = var.sg_name
     },
     var.additional_tags,

@@ -35,11 +35,11 @@ variable "instance_type" {
 variable "ami_name" {
   description = "The name of the AMI to use for the instance"
   type        = string
-  default = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20240701.1"
+  default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20240701.1"
 }
 
 variable "ami_owner" {
   description = "The owner of the AMI to use for the instance"
   type        = string
-  default = "099720109477"
+  default     = "099720109477"
 }
