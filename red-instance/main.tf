@@ -57,12 +57,12 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_instance" "red-instance" {
-  ami                    = data.aws_ami.red_ami.id
-  instance_type          = var.instance_type
-  subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  ami                         = data.aws_ami.red_ami.id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id]
   associate_public_ip_address = true
-  key_name = aws_key_pair.red_key.key_name
+  key_name                    = aws_key_pair.red_key.key_name
 
   metadata_options {
     http_endpoint = "enabled"

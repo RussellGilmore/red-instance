@@ -11,8 +11,8 @@ variable "region" {
 module "red-instance" {
   source = "../red-instance"
 
-  project_name     = var.project_name
-  region           = var.region
+  project_name     = "Red-Instance"
+  region           = "us-east-1"
   create_resources = true
   sg_name          = "ssh-access"
   additional_tags = {
