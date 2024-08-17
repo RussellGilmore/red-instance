@@ -9,11 +9,6 @@ variable "region" {
   type        = string
 }
 
-variable "sg_name" {
-  description = "The name of the security group"
-  type        = string
-}
-
 # Optional Variables
 variable "additional_tags" {
   description = "Additional tags to apply to the resources"
@@ -67,4 +62,22 @@ variable "volume_size" {
   description = "The size of the root volume in GB"
   type        = number
   default     = 30
+}
+
+variable "ingress_rules" {
+  description = "List of ingress rules"
+  type = list(object({
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+  default = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
 }

@@ -30,14 +30,17 @@ data "aws_ami" "red_ami" {
 
 resource "aws_security_group" "allow_ssh" {
   vpc_id = aws_vpc.main.id
+  name   = "${var.project_name}-ingress-sg"
 
-  name = var.sg_name
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  # Dynamic ingress rules
+  dynamic "ingress" {
+    for_each = var.ingress_rules
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+    }
   }
 
   egress {
@@ -49,8 +52,7 @@ resource "aws_security_group" "allow_ssh" {
 
   tags = merge(
     {
-      Name     = "${var.project_name}-Red-Instance"
-      Function = var.sg_name
+      Name = "${var.project_name}-Red-Instance"
     },
     var.additional_tags,
   )

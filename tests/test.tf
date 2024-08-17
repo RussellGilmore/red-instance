@@ -13,7 +13,6 @@ module "red-instance" {
 
   project_name = var.project_name
   region       = var.region
-  sg_name      = "ssh-access"
   additional_tags = {
     Environment = "Dev"
   }
