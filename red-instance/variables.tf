@@ -9,11 +9,6 @@ variable "region" {
   type        = string
 }
 
-variable "create_resources" {
-  description = "Controls whether resources should be created"
-  type        = bool
-}
-
 variable "sg_name" {
   description = "The name of the security group"
   type        = string
@@ -42,4 +37,34 @@ variable "ami_owner" {
   description = "The owner of the AMI to use for the instance"
   type        = string
   default     = "099720109477"
+}
+
+variable "allocate_eip" {
+  description = "Controls whether an Elastic IP should be allocated"
+  type        = bool
+  default     = true
+}
+
+variable "create_public_networking" {
+  description = "Controls whether networking resources should be created"
+  type        = bool
+  default     = true
+}
+
+variable "disable_api_termination" {
+  description = "Controls whether API termination is disabled"
+  type        = bool
+  default     = false
+}
+
+variable "disable_api_stop" {
+  description = "Controls whether API stop is disabled"
+  type        = bool
+  default     = false
+}
+
+variable "volume_size" {
+  description = "The size of the root volume in GB"
+  type        = number
+  default     = 30
 }

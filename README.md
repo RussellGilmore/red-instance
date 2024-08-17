@@ -29,6 +29,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_eip.red_instance_eip](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/eip) | resource |
 | [aws_instance.red-instance](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/instance) | resource |
 | [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/internet_gateway) | resource |
 | [aws_key_pair.red_key](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/key_pair) | resource |
@@ -46,13 +47,17 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Additional tags to apply to the resources | `map(string)` | `{}` | no |
+| <a name="input_allocate_eip"></a> [allocate\_eip](#input\_allocate\_eip) | Controls whether an Elastic IP should be allocated | `bool` | `true` | no |
 | <a name="input_ami_name"></a> [ami\_name](#input\_ami\_name) | The name of the AMI to use for the instance | `string` | `"ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20240701.1"` | no |
 | <a name="input_ami_owner"></a> [ami\_owner](#input\_ami\_owner) | The owner of the AMI to use for the instance | `string` | `"099720109477"` | no |
-| <a name="input_create_resources"></a> [create\_resources](#input\_create\_resources) | Controls whether resources should be created | `bool` | n/a | yes |
+| <a name="input_create_public_networking"></a> [create\_public\_networking](#input\_create\_public\_networking) | Controls whether networking resources should be created | `bool` | `true` | no |
+| <a name="input_disable_api_stop"></a> [disable\_api\_stop](#input\_disable\_api\_stop) | Controls whether API stop is disabled | `bool` | `false` | no |
+| <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination) | Controls whether API termination is disabled | `bool` | `false` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The instance type to use for the instance | `string` | `"t2.micro"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Set the project name. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Set the appropriate AWS region. | `string` | n/a | yes |
 | <a name="input_sg_name"></a> [sg\_name](#input\_sg\_name) | The name of the security group | `string` | n/a | yes |
+| <a name="input_volume_size"></a> [volume\_size](#input\_volume\_size) | The size of the root volume in GB | `number` | `30` | no |
 
 ## Outputs
 
@@ -61,6 +66,7 @@ No modules.
 | <a name="output_key_fingerprint"></a> [key\_fingerprint](#output\_key\_fingerprint) | n/a |
 | <a name="output_key_name"></a> [key\_name](#output\_key\_name) | n/a |
 | <a name="output_private_key_path"></a> [private\_key\_path](#output\_private\_key\_path) | n/a |
+| <a name="output_public_ip"></a> [public\_ip](#output\_public\_ip) | n/a |
 | <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | n/a |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | n/a |
 <!-- END_TF_DOCS -->

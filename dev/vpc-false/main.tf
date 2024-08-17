@@ -9,7 +9,7 @@ variable "region" {
 }
 
 module "red-instance" {
-  source = "../red-instance"
+  source = "../../red-instance"
 
   project_name     = "Red-Instance"
   region           = "us-east-1"

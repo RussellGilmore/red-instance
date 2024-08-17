@@ -19,5 +19,5 @@ output "private_key_path" {
 }
 
 output "public_ip" {
-  value = aws_instance.red-instance.public_ip
+  value = var.allocate_eip ? aws_eip.red_instance_eip[0].public_ip : "Public IP not allocated"
 }

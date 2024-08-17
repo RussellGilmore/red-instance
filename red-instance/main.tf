@@ -57,16 +57,26 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_instance" "red-instance" {
-  ami                         = data.aws_ami.red_ami.id
-  instance_type               = var.instance_type
-  subnet_id                   = aws_subnet.public.id
-  vpc_security_group_ids      = [aws_security_group.allow_ssh.id]
-  associate_public_ip_address = true
-  key_name                    = aws_key_pair.red_key.key_name
+  ami                     = data.aws_ami.red_ami.id
+  instance_type           = var.instance_type
+  subnet_id               = aws_subnet.public.id
+  vpc_security_group_ids  = [aws_security_group.allow_ssh.id]
+  key_name                = aws_key_pair.red_key.key_name
+  disable_api_termination = var.disable_api_termination
+  disable_api_stop        = var.disable_api_stop
 
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
+  }
+
+  root_block_device {
+    volume_type           = "gp3"
+    volume_size           = var.volume_size
+    delete_on_termination = true
+    iops                  = 3000
+    throughput            = 125
+    encrypted             = true
   }
 
   tags = merge(
@@ -77,8 +87,11 @@ resource "aws_instance" "red-instance" {
   )
 }
 
+# Resource block for allocating an Elastic IP address (optional)
 resource "aws_eip" "red_instance_eip" {
-  instance = aws_instance.red_instance.id
+  count    = var.allocate_eip ? 1 : 0
+  instance = aws_instance.red-instance.id
+
   tags = merge(
     {
       Name = "${var.project_name}-red-instance-eip"
