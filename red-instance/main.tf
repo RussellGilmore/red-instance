@@ -76,3 +76,13 @@ resource "aws_instance" "red-instance" {
     var.additional_tags,
   )
 }
+
+resource "aws_eip" "red_instance_eip" {
+  instance = aws_instance.red_instance.id
+  tags = merge(
+    {
+      Name = "${var.project_name}-red-instance-eip"
+    },
+    var.additional_tags,
+  )
+}

@@ -17,3 +17,7 @@ output "key_fingerprint" {
 output "private_key_path" {
   value = local_file.private_key_pem.filename
 }
+
+output "public_ip" {
+  value = aws_instance.red-instance.public_ip
+}
