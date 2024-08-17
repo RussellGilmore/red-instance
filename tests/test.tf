@@ -11,10 +11,9 @@ variable "region" {
 module "red-instance" {
   source = "../red-instance"
 
-  project_name     = var.project_name
-  region           = var.region
-  create_resources = true
-  sg_name          = "ssh-access"
+  project_name = var.project_name
+  region       = var.region
+  sg_name      = "ssh-access"
   additional_tags = {
     Environment = "Dev"
   }
@@ -39,4 +38,8 @@ output "key_fingerprint" {
 
 output "private_key_path" {
   value = module.red-instance.private_key_path
+}
+
+output "public_ip" {
+  value = module.red-instance.public_ip
 }
