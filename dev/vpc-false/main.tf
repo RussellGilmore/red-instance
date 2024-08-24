@@ -1,10 +1,24 @@
 module "red-instance" {
   source = "../../red-instance"
 
-  project_name = "Red-Instance"
+  project_name = "Red-Instance-Has-No-VPC"
   region       = "us-east-1"
+  ingress_rules = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
   additional_tags = {
-    Environment = "Has-VPC"
+    Environment = "Has-No-VPC"
   }
 }
 

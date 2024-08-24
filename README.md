@@ -69,7 +69,7 @@ No modules.
 | <a name="output_key_name"></a> [key\_name](#output\_key\_name) | The name of the key pair |
 | <a name="output_private_key_path"></a> [private\_key\_path](#output\_private\_key\_path) | The path to the private key file |
 | <a name="output_public_ip"></a> [public\_ip](#output\_public\_ip) | The public IP address of the instance |
-| <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | The ID of the public subnet |
-| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
+| <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | The ID of the created subnet |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the created VPC |
 <!-- END_TF_DOCS -->
 <!-- prettier-ignore-end -->

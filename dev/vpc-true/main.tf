@@ -1,7 +1,7 @@
 module "red-instance" {
   source = "../../red-instance"
 
-  project_name = "Red-Instance"
+  project_name = "Red-Instance-Has-VPC"
   region       = "us-east-1"
   ingress_rules = [
     {

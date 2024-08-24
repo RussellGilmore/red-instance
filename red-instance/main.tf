@@ -29,7 +29,7 @@ data "aws_ami" "red_ami" {
 }
 
 resource "aws_security_group" "allow_ssh" {
-  vpc_id = var.create_vpc ? aws_vpc.main.id : var.vpc_id
+  vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name   = "${var.project_name}-ingress-sg"
 
   # Dynamic ingress rules
@@ -61,7 +61,7 @@ resource "aws_security_group" "allow_ssh" {
 resource "aws_instance" "red-instance" {
   ami                     = data.aws_ami.red_ami.id
   instance_type           = var.instance_type
-  subnet_id               = var.create_vpc ? aws_subnet.public.id : var.subnet_id
+  subnet_id               = var.create_vpc ? aws_subnet.public[0].id : var.subnet_id
   vpc_security_group_ids  = [aws_security_group.allow_ssh.id]
   key_name                = aws_key_pair.red_key.key_name
   disable_api_termination = var.disable_api_termination

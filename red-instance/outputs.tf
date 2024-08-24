@@ -1,11 +1,11 @@
 output "vpc_id" {
-  value       = aws_vpc.main.id
-  description = "The ID of the VPC"
+  value       = var.create_vpc ? aws_vpc.main[0].id : "VPC was inherited from another module or resource"
+  description = "The ID of the created VPC"
 }
 
 output "subnet_id" {
-  value       = aws_subnet.public.id
-  description = "The ID of the public subnet"
+  value       = var.create_vpc ? aws_subnet.public[0].id : "Subnet was inherited from another module or resource"
+  description = "The ID of the created subnet"
 }
 
 output "key_name" {
