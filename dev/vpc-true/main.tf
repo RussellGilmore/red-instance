@@ -17,7 +17,9 @@ module "red-instance" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
-  user_data_script_path = "script.sh"
+  user_data_script_path   = "script.sh"
+  enable_s3_bucket_policy = true
+  s3_bucket_name          = "red-drop-s3"
   additional_tags = {
     Environment = "Has-VPC"
   }

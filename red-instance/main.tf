@@ -28,6 +28,7 @@ data "aws_ami" "red_ami" {
   owners = [var.ami_owner] # Canonical
 }
 
+# Dynamic block for creating ingress rules
 resource "aws_security_group" "allow_ssh" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name   = "${var.project_name}-ingress-sg"
@@ -58,6 +59,7 @@ resource "aws_security_group" "allow_ssh" {
   )
 }
 
+# The Red Instance main resource block
 resource "aws_instance" "red-instance" {
   ami                     = data.aws_ami.red_ami.id
   instance_type           = var.instance_type
@@ -67,6 +69,7 @@ resource "aws_instance" "red-instance" {
   disable_api_termination = var.disable_api_termination
   disable_api_stop        = var.disable_api_stop
   user_data               = var.user_data_script_path != "" ? file(var.user_data_script_path) : null
+  iam_instance_profile    = aws_iam_instance_profile.red_instance_profile.name
 
   metadata_options {
     http_endpoint = "enabled"

@@ -4,6 +4,15 @@
 
 A EC2 module module designed to be practical for casual use.
 
+## Features
+
+1. Gives to ability for create a EC2 Instance
+2. Optionally Create all network infrastructure needed for public access
+3. Pass custom user data into instance creation
+4. SSM and S3 Access Permissions for access and ease of use
+5. Creates Key for SSH Access
+6. Dynamically Create Ingress Security Rules
+
 <!-- prettier-ignore-start -->
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -30,6 +39,10 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_eip.red_instance_eip](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/eip) | resource |
+| [aws_iam_instance_profile.red_instance_profile](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_role.red_role](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.s3_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy_attachment.ssm_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_instance.red-instance](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/instance) | resource |
 | [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/internet_gateway) | resource |
 | [aws_key_pair.red_key](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/key_pair) | resource |
@@ -53,10 +66,12 @@ No modules.
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls whether networking resources should be created for public exposed server | `bool` | `true` | no |
 | <a name="input_disable_api_stop"></a> [disable\_api\_stop](#input\_disable\_api\_stop) | Controls whether API stop is disabled | `bool` | `false` | no |
 | <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination) | Controls whether API termination is disabled | `bool` | `false` | no |
+| <a name="input_enable_s3_bucket_policy"></a> [enable\_s3\_bucket\_policy](#input\_enable\_s3\_bucket\_policy) | Controls whether an S3 bucket policy should be attached to the instance role | `bool` | `false` | no |
 | <a name="input_ingress_rules"></a> [ingress\_rules](#input\_ingress\_rules) | List of ingress rules | <pre>list(object({<br>    from_port   = number<br>    to_port     = number<br>    protocol    = string<br>    cidr_blocks = list(string)<br>  }))</pre> | <pre>[<br>  {<br>    "cidr_blocks": [<br>      "0.0.0.0/0"<br>    ],<br>    "from_port": 22,<br>    "protocol": "tcp",<br>    "to_port": 22<br>  }<br>]</pre> | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The instance type to use for the instance | `string` | `"t2.micro"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Set the project name. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Set the appropriate AWS region. | `string` | n/a | yes |
+| <a name="input_s3_bucket_name"></a> [s3\_bucket\_name](#input\_s3\_bucket\_name) | The name of the S3 bucket to use for the instance | `string` | `""` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet to use for the instance | `string` | `""` | no |
 | <a name="input_user_data_script_path"></a> [user\_data\_script\_path](#input\_user\_data\_script\_path) | The path to the user data script | `string` | `""` | no |
 | <a name="input_volume_size"></a> [volume\_size](#input\_volume\_size) | The size of the root volume in GB | `number` | `30` | no |

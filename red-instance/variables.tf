@@ -82,7 +82,7 @@ variable "user_data_script_path" {
   default     = ""
 }
 
-# Optional Variables for VPC
+# Optional Variables for Infrastructure
 variable "create_vpc" {
   description = "Controls whether networking resources should be created for public exposed server"
   type        = bool
@@ -99,4 +99,16 @@ variable "subnet_id" {
   description = "The ID of the subnet to use for the instance"
   type        = string
   default     = ""
+}
+
+variable "s3_bucket_name" {
+  description = "The name of the S3 bucket to use for the instance"
+  type        = string
+  default     = ""
+}
+
+variable "enable_s3_bucket_policy" {
+  description = "Controls whether an S3 bucket policy should be attached to the instance role"
+  type        = bool
+  default     = false
 }
