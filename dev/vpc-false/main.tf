@@ -17,6 +17,9 @@ module "red-instance" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
+  create_vpc = false
+  vpc_id     = "vpc-98a359e0"
+  subnet_id  = "subnet-2a3dea61"
   additional_tags = {
     Environment = "Has-No-VPC"
   }

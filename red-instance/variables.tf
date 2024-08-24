@@ -9,7 +9,7 @@ variable "region" {
   type        = string
 }
 
-# Optional Variables
+# Optional EC2 Variables
 variable "additional_tags" {
   description = "Additional tags to apply to the resources"
   type        = map(string)
@@ -74,6 +74,12 @@ variable "ingress_rules" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
+}
+
+variable "user_data_script_path" {
+  description = "The path to the user data script"
+  type        = string
+  default     = ""
 }
 
 # Optional Variables for VPC

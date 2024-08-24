@@ -66,6 +66,7 @@ resource "aws_instance" "red-instance" {
   key_name                = aws_key_pair.red_key.key_name
   disable_api_termination = var.disable_api_termination
   disable_api_stop        = var.disable_api_stop
+  user_data               = var.user_data_script_path != "" ? file(var.user_data_script_path) : null
 
   metadata_options {
     http_endpoint = "enabled"

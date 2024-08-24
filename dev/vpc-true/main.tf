@@ -17,6 +17,7 @@ module "red-instance" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
+  user_data_script_path = "script.sh"
   additional_tags = {
     Environment = "Has-VPC"
   }
