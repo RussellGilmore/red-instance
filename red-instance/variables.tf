@@ -40,12 +40,6 @@ variable "allocate_eip" {
   default     = true
 }
 
-variable "create_public_networking" {
-  description = "Controls whether networking resources should be created"
-  type        = bool
-  default     = true
-}
-
 variable "disable_api_termination" {
   description = "Controls whether API termination is disabled"
   type        = bool
@@ -80,4 +74,23 @@ variable "ingress_rules" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
+}
+
+# Optional Variables for VPC
+variable "create_vpc" {
+  description = "Controls whether networking resources should be created for public exposed server"
+  type        = bool
+  default     = true
+}
+
+variable "vpc_id" {
+  description = "The ID of the VPC to use for the instance"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_id" {
+  description = "The ID of the subnet to use for the instance"
+  type        = string
+  default     = ""
 }
