@@ -1,3 +1,5 @@
+# This file is used to test with features sets disabled.
+
 module "red-instance" {
   source = "../../red-instance"
 

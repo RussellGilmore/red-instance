@@ -1,15 +1,19 @@
 #!/bin/bash
 
+# Install AWS CLI v2 on SUSE and Ubuntu Linux (x86_64 and arm)
+
 # Check the Linux distribution
 if [[ -f /etc/os-release ]]; then
   source /etc/os-release
   if [[ $ID == "ubuntu" ]]; then
     # Update Ubuntu and install unzip
     sudo apt update
+    sudo apt upgrade -y
     sudo apt install -y unzip
   elif [[ $ID == "suse" ]]; then
     # Update SUSE and install unzip
     sudo zypper refresh
+    sudo zypper update -y
     sudo zypper install -y unzip
   else
     echo "Unsupported Linux distribution: $ID"

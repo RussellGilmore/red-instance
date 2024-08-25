@@ -6,6 +6,7 @@ resource "aws_iam_instance_profile" "red_instance_profile" {
   role = aws_iam_role.red_role.name
 }
 
+# Create the IAM role for the Red Instance
 resource "aws_iam_role" "red_role" {
   name               = "${var.project_name}-role"
   assume_role_policy = <<EOF

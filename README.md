@@ -13,6 +13,8 @@ A EC2 module module designed to be practical for casual use.
 5. Creates Key for SSH Access
 6. Dynamically Create Ingress Security Rules
 
+Contains a useful scripts for setting up AWS CLI for both SUSE and Ubuntu Linux
+
 <!-- prettier-ignore-start -->
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
