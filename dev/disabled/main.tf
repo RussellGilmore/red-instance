@@ -51,3 +51,7 @@ output "private_key_path" {
 output "public_ip" {
   value = module.red-instance.public_ip
 }
+
+output "public_dns" {
+  value = module.red-instance.public_dns
+}

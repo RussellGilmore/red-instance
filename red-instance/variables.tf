@@ -112,3 +112,21 @@ variable "enable_s3_bucket_policy" {
   type        = bool
   default     = false
 }
+
+variable "enable_public_dns" {
+  description = "Controls whether a public DNS record should be created"
+  type        = bool
+  default     = false
+}
+
+variable "apex_domain" {
+  description = "The apex domain to use for the public DNS record"
+  type        = string
+  default     = ""
+}
+
+variable "dns_name" {
+  description = "The DNS name to use for the public DNS record"
+  type        = string
+  default     = ""
+}

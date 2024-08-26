@@ -20,6 +20,10 @@ module "red-instance" {
   user_data_script_path   = "script.sh"
   enable_s3_bucket_policy = true
   s3_bucket_name          = "red-drop-s3"
+  enable_public_dns       = true
+  apex_domain             = "rag-space.com"
+  dns_name                = "red-instance.rag-space.com"
+
   additional_tags = {
     Environment = "Has-VPC"
   }
@@ -48,4 +52,8 @@ output "private_key_path" {
 
 output "public_ip" {
   value = module.red-instance.public_ip
+}
+
+output "public_dns" {
+  value = module.red-instance.public_dns
 }

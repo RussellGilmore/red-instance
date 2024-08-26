@@ -27,3 +27,8 @@ output "public_ip" {
   value       = var.allocate_eip ? aws_eip.red_instance_eip[0].public_ip : "Public IP not allocated"
   description = "The public IP address of the instance"
 }
+
+output "public_dns" {
+  value       = var.enable_public_dns ? aws_route53_record.red_instance_dns[0].fqdn : "Public DNS not allocated"
+  description = "The public DNS name of the instance"
+}

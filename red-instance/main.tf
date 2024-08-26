@@ -92,16 +92,3 @@ resource "aws_instance" "red-instance" {
     var.additional_tags,
   )
 }
-
-# Resource block for allocating an Elastic IP address (optional)
-resource "aws_eip" "red_instance_eip" {
-  count    = var.allocate_eip ? 1 : 0
-  instance = aws_instance.red-instance.id
-
-  tags = merge(
-    {
-      Name = "${var.project_name}-red-instance-eip"
-    },
-    var.additional_tags,
-  )
-}
