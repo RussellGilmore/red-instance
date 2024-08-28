@@ -1,3 +1,4 @@
+####################################################################################################
 # Required Variables
 variable "project_name" {
   description = "Set the project name."
@@ -9,7 +10,8 @@ variable "region" {
   type        = string
 }
 
-# Optional EC2 Variables
+####################################################################################################
+# Optional Red Instance Variables
 variable "additional_tags" {
   description = "Additional tags to apply to the resources"
   type        = map(string)
@@ -82,7 +84,8 @@ variable "user_data_script_path" {
   default     = ""
 }
 
-# Optional Variables for Infrastructure
+####################################################################################################
+# Optional Variables for Red Instance Features
 variable "create_vpc" {
   description = "Controls whether networking resources should be created for public exposed server"
   type        = bool

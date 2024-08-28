@@ -7,14 +7,16 @@ A EC2 module module designed to be practical for casual use.
 ## Features
 
 1. Gives to ability for create a EC2 Instance
-2. Optionally Create all network infrastructure needed for public access
-3. Pass custom user data into instance creation
-4. SSM and S3 Access Permissions for access and ease of use
-5. Creates Key for SSH Access
-6. Dynamically Create Ingress Security Rules
-7. Provision a Public DNS record for the Red Instance
+2. EC2 is already setup for SSM Agent to be installed
+3. Creates Key for SSH Access
+4. Dynamically Create Ingress Security Rules
+5. Optionally create all network infrastructure needed for public access
+6. Optionally create public DNS record for the Red Instance
+7. Optionally pass user data into instance creation
+8. Optionally enabled S3 Bucket IAM Role Access
 
-Contains a useful scripts for setting up AWS CLI for both SUSE and Ubuntu Linux.
+> Contains a useful script for setting up AWS CLI and updating OS packages for
+> both SUSE and Ubuntu Linux.
 
 ```bash
 #!/bin/bash
@@ -86,9 +88,9 @@ No modules.
 | [aws_iam_instance_profile.red_instance_profile](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_role.red_role](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.s3_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy_attachment.ssm_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.red_ssm_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_instance.red-instance](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/instance) | resource |
-| [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/internet_gateway) | resource |
+| [aws_internet_gateway.igw](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/internet_gateway) | resource |
 | [aws_key_pair.red_key](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/key_pair) | resource |
 | [aws_route53_record.red_instance_dns](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/route53_record) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/route_table) | resource |
@@ -96,7 +98,7 @@ No modules.
 | [aws_security_group.allow_ssh](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/security_group) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/subnet) | resource |
 | [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/vpc) | resource |
-| [local_file.private_key_pem](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [local_file.red_private_key_file](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [tls_private_key.red_private_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [aws_ami.red_ami](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/data-sources/ami) | data source |
 | [aws_route53_zone.zone](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/data-sources/route53_zone) | data source |

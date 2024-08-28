@@ -1,3 +1,5 @@
+# Contains the main resource block for creating the Red Instance
+
 # Provider configuration with default tags
 provider "aws" {
   region = var.region
@@ -25,13 +27,13 @@ data "aws_ami" "red_ami" {
     values = ["hvm"]
   }
 
-  owners = [var.ami_owner] # Canonical
+  owners = [var.ami_owner]
 }
 
 # Dynamic block for creating ingress rules
 resource "aws_security_group" "allow_ssh" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
-  name   = "${var.project_name}-ingress-sg"
+  name   = "${lower(var.project_name)}-ingress-sg"
 
   # Dynamic ingress rules
   dynamic "ingress" {
@@ -43,7 +45,7 @@ resource "aws_security_group" "allow_ssh" {
       cidr_blocks = ingress.value.cidr_blocks
     }
   }
-
+  # Allows all egress traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -53,7 +55,7 @@ resource "aws_security_group" "allow_ssh" {
 
   tags = merge(
     {
-      Name = "${var.project_name}-Red-Instance"
+      Name = "${lower(var.project_name)}-red-instance"
     },
     var.additional_tags,
   )
@@ -87,7 +89,7 @@ resource "aws_instance" "red-instance" {
 
   tags = merge(
     {
-      Name = "${var.project_name}-Red-Instance"
+      Name = "${lower(var.project_name)}-red-instance"
     },
     var.additional_tags,
   )
