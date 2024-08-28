@@ -7,9 +7,12 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags = {
-    Name = "main-vpc"
-  }
+  tags = merge(
+    {
+      Name = "${lower(var.project_name)}-red-instance-vpc"
+    },
+    var.additional_tags,
+  )
 }
 
 # Create a public subnet
@@ -19,19 +22,25 @@ resource "aws_subnet" "public" {
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 
-  tags = {
-    Name = "public-subnet"
-  }
+  tags = merge(
+    {
+      Name = "${lower(var.project_name)}-red-instance-public-subnet"
+    },
+    var.additional_tags,
+  )
 }
 
 # Create an internet gateway
-resource "aws_internet_gateway" "main" {
+resource "aws_internet_gateway" "igw" {
   count  = var.create_vpc ? 1 : 0
   vpc_id = aws_vpc.main[0].id
 
-  tags = {
-    Name = "main-igw"
-  }
+  tags = merge(
+    {
+      Name = "${lower(var.project_name)}-red-instance-igw"
+    },
+    var.additional_tags,
+  )
 }
 
 # Create a route table and associate it with the public subnet
@@ -41,12 +50,15 @@ resource "aws_route_table" "public" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main[0].id
+    gateway_id = aws_internet_gateway.igw[0].id
   }
 
-  tags = {
-    Name = "public-route-table"
-  }
+  tags = merge(
+    {
+      Name = "${lower(var.project_name)}-red-instance-public-route-table"
+    },
+    var.additional_tags,
+  )
 }
 
 # Associate the route table with the public subnet

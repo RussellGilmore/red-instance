@@ -1,13 +1,3 @@
-output "vpc_id" {
-  value       = var.create_vpc ? aws_vpc.main[0].id : "VPC was inherited from another module or resource"
-  description = "The ID of the created VPC"
-}
-
-output "subnet_id" {
-  value       = var.create_vpc ? aws_subnet.public[0].id : "Subnet was inherited from another module or resource"
-  description = "The ID of the created subnet"
-}
-
 output "key_name" {
   value       = aws_key_pair.red_key.key_name
   description = "The name of the key pair"
@@ -19,8 +9,18 @@ output "key_fingerprint" {
 }
 
 output "private_key_path" {
-  value       = local_file.private_key_pem.filename
+  value       = local_file.red_private_key_file.filename
   description = "The path to the private key file"
+}
+
+output "vpc_id" {
+  value       = var.create_vpc ? aws_vpc.main[0].id : "VPC was inherited from another module or resource"
+  description = "The ID of the created VPC"
+}
+
+output "subnet_id" {
+  value       = var.create_vpc ? aws_subnet.public[0].id : "Subnet was inherited from another module or resource"
+  description = "The ID of the created subnet"
 }
 
 output "public_ip" {

@@ -1,3 +1,5 @@
+# Define the required Terraform version and provider version
+
 terraform {
   required_version = "1.9.0"
   required_providers {

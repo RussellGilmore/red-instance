@@ -1,11 +1,13 @@
+# Creates a key pair for the EC2 instance and saves the private key to a file
+
 # Create a key pair for the EC2 instance
 resource "aws_key_pair" "red_key" {
-  key_name   = "${var.project_name}-red-instance-key"
+  key_name   = "${lower(var.project_name)}-red-instance-key"
   public_key = tls_private_key.red_private_key.public_key_openssh
 
   tags = merge(
     {
-      Name = "${var.project_name}-red-instance-key"
+      Name = "${lower(var.project_name)}-red-instance-key"
     },
     var.additional_tags,
   )
@@ -18,8 +20,8 @@ resource "tls_private_key" "red_private_key" {
 }
 
 # Save the private key to a file
-resource "local_file" "private_key_pem" {
-  filename        = "${var.project_name}-ec2-key.pem"
+resource "local_file" "red_private_key_file" {
+  filename        = "${lower(var.project_name)}-ec2-key.pem"
   content         = tls_private_key.red_private_key.private_key_pem
   file_permission = "0400"
 }
