@@ -65,14 +65,14 @@ fi
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.9.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.57.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.9.8 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.75.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.57.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.75.1 |
 | <a name="provider_local"></a> [local](#provider\_local) | n/a |
 | <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
 
@@ -84,24 +84,24 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_eip.red_instance_eip](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/eip) | resource |
-| [aws_iam_instance_profile.red_instance_profile](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_instance_profile) | resource |
-| [aws_iam_role.red_role](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.s3_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy_attachment.red_ssm_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_instance.red-instance](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/instance) | resource |
-| [aws_internet_gateway.igw](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/internet_gateway) | resource |
-| [aws_key_pair.red_key](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/key_pair) | resource |
-| [aws_route53_record.red_instance_dns](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/route53_record) | resource |
-| [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/route_table) | resource |
-| [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/route_table_association) | resource |
-| [aws_security_group.allow_ssh](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/security_group) | resource |
-| [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/subnet) | resource |
-| [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/resources/vpc) | resource |
+| [aws_eip.red_instance_eip](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/eip) | resource |
+| [aws_iam_instance_profile.red_instance_profile](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_role.red_role](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.s3_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy_attachment.red_ssm_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_instance.red-instance](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/instance) | resource |
+| [aws_internet_gateway.igw](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/internet_gateway) | resource |
+| [aws_key_pair.red_key](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/key_pair) | resource |
+| [aws_route53_record.red_instance_dns](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/route53_record) | resource |
+| [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/route_table) | resource |
+| [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/route_table_association) | resource |
+| [aws_security_group.allow_ssh](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/security_group) | resource |
+| [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/subnet) | resource |
+| [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/resources/vpc) | resource |
 | [local_file.red_private_key_file](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [tls_private_key.red_private_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
-| [aws_ami.red_ami](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/data-sources/ami) | data source |
-| [aws_route53_zone.zone](https://registry.terraform.io/providers/hashicorp/aws/5.57.0/docs/data-sources/route53_zone) | data source |
+| [aws_ami.red_ami](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/data-sources/ami) | data source |
+| [aws_route53_zone.zone](https://registry.terraform.io/providers/hashicorp/aws/5.75.1/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
 
@@ -118,7 +118,7 @@ No modules.
 | <a name="input_dns_name"></a> [dns\_name](#input\_dns\_name) | The DNS name to use for the public DNS record | `string` | `""` | no |
 | <a name="input_enable_public_dns"></a> [enable\_public\_dns](#input\_enable\_public\_dns) | Controls whether a public DNS record should be created | `bool` | `false` | no |
 | <a name="input_enable_s3_bucket_policy"></a> [enable\_s3\_bucket\_policy](#input\_enable\_s3\_bucket\_policy) | Controls whether an S3 bucket policy should be attached to the instance role | `bool` | `false` | no |
-| <a name="input_ingress_rules"></a> [ingress\_rules](#input\_ingress\_rules) | List of ingress rules | <pre>list(object({<br>    from_port   = number<br>    to_port     = number<br>    protocol    = string<br>    cidr_blocks = list(string)<br>  }))</pre> | <pre>[<br>  {<br>    "cidr_blocks": [<br>      "0.0.0.0/0"<br>    ],<br>    "from_port": 22,<br>    "protocol": "tcp",<br>    "to_port": 22<br>  }<br>]</pre> | no |
+| <a name="input_ingress_rules"></a> [ingress\_rules](#input\_ingress\_rules) | List of ingress rules | <pre>list(object({<br/>    from_port   = number<br/>    to_port     = number<br/>    protocol    = string<br/>    cidr_blocks = list(string)<br/>  }))</pre> | <pre>[<br/>  {<br/>    "cidr_blocks": [<br/>      "0.0.0.0/0"<br/>    ],<br/>    "from_port": 22,<br/>    "protocol": "tcp",<br/>    "to_port": 22<br/>  }<br/>]</pre> | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The instance type to use for the instance | `string` | `"t2.micro"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Set the project name. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Set the appropriate AWS region. | `string` | n/a | yes |
