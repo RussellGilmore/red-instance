@@ -35,9 +35,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Terraform lock files
-.terraform.lock.hcl
-
 ############### Golang ###############
 # Binaries for programs and plugins
 *.exe

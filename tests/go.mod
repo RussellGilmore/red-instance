@@ -1,4 +1,4 @@
-module module/red-backend
+module module/red-instance
 
 go 1.23.2
 
