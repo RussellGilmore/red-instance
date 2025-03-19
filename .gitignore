@@ -5,7 +5,7 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
+**/terraform.lock.hcl
 
 # Crash log files
 crash.log
@@ -74,10 +74,6 @@ go.work
 
 
 ############# Module #############
-# Ignore all files in the site directory
-site/*
-
-############### Module #############
 # Ignore all files in the site directory
 site/*
 
