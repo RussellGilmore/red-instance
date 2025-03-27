@@ -71,6 +71,7 @@ No modules.
 | <a name="input_ami_name"></a> [ami\_name](#input\_ami\_name) | The name of the AMI to use for the instance | `string` | `"ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20240701.1"` | no |
 | <a name="input_ami_owner"></a> [ami\_owner](#input\_ami\_owner) | The owner of the AMI to use for the instance | `string` | `"099720109477"` | no |
 | <a name="input_apex_domain"></a> [apex\_domain](#input\_apex\_domain) | The apex domain to use for the public DNS record | `string` | `""` | no |
+| <a name="input_create_ec2_key_pair"></a> [create\_ec2\_key\_pair](#input\_create\_ec2\_key\_pair) | Controls whether an EC2 key pair should be created | `bool` | `false` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | Controls whether networking resources should be created for public exposed server | `bool` | `true` | no |
 | <a name="input_disable_api_stop"></a> [disable\_api\_stop](#input\_disable\_api\_stop) | Controls whether API stop is disabled | `bool` | `false` | no |
 | <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination) | Controls whether API termination is disabled | `bool` | `false` | no |

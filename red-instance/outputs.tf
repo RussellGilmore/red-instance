@@ -1,15 +1,15 @@
 output "key_name" {
-  value       = aws_key_pair.red_key.key_name
+  value       = var.create_ec2_key_pair ? aws_key_pair.red_key[0].key_name : "A Key pair was not created for this instance"
   description = "The name of the key pair"
 }
 
 output "key_fingerprint" {
-  value       = aws_key_pair.red_key.fingerprint
+  value       = var.create_ec2_key_pair ? aws_key_pair.red_key[0].fingerprint : "A Key pair was not created for this instance"
   description = "The fingerprint of the key pair"
 }
 
 output "private_key_path" {
-  value       = local_file.red_private_key_file.filename
+  value       = var.create_ec2_key_pair ? local_file.red_private_key_file[0].filename : "A Key pair was not created for this instance"
   description = "The path to the private key file"
 }
 

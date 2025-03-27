@@ -104,6 +104,12 @@ variable "subnet_id" {
   default     = ""
 }
 
+variable "create_ec2_key_pair" {
+  description = "Controls whether an EC2 key pair should be created"
+  type        = bool
+  default     = false
+}
+
 variable "s3_bucket_name" {
   description = "The name of the S3 bucket to use for the instance"
   type        = string
