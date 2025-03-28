@@ -17,12 +17,14 @@ module "red-instance" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
-  user_data_script_path   = "script.sh"
+  user_data_script_path   = "../../scripts/init.sh"
   enable_s3_bucket_policy = true
   s3_bucket_name          = "red-drop-s3"
   enable_public_dns       = true
   apex_domain             = "rag-space.com"
   dns_name                = "red-instance.rag-space.com"
+  create_ec2_key_pair     = true
+  create_vpc              = true
 
   additional_tags = {
     Environment = "Has-VPC"

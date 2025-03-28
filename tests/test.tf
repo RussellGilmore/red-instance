@@ -11,10 +11,13 @@ variable "region" {
 module "red-instance" {
   source = "../red-instance"
 
-  project_name = var.project_name
-  region       = var.region
+  project_name          = var.project_name
+  region                = var.region
+  user_data_script_path = "../../scripts/init.sh"
+  create_ec2_key_pair   = true
+  create_vpc            = true
   additional_tags = {
-    Environment = "Dev"
+    Environment = "Test"
   }
 }
 
