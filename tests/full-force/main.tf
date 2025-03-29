@@ -1,0 +1,93 @@
+module "red-instance" {
+  source = "../../red-instance"
+
+  project_name = "Red-Instance-All-Features"
+  region       = "us-east-1"
+
+  # Custom AMI and instance configuration
+  ami_name      = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"
+  ami_owner     = "099720109477" # Canonical
+  instance_type = "t4g.small"
+  volume_size   = 50
+
+  # Enable all optional features
+  create_vpc              = true
+  allocate_eip            = true
+  create_ec2_key_pair     = true
+  enable_public_dns       = true
+  apex_domain             = "rag-space.com"
+  dns_name                = "red-instance.rag-space.com"
+  enable_s3_bucket_policy = true
+  s3_bucket_name          = "red-instance-full-test-bucket"
+
+  # User data script
+  user_data_script_path = "../../scripts/init.sh"
+
+  # Security settings
+  disable_api_termination = true
+  disable_api_stop        = true
+
+  # Comprehensive security group rules
+  ingress_rules = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["10.0.0.0/16"]
+    },
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port   = 8000
+      to_port     = 9000
+      protocol    = "tcp"
+      cidr_blocks = ["10.0.0.0/8"]
+    }
+  ]
+
+  additional_tags = {
+    Environment = "Test-All-Features"
+    TestCase    = "Full-Feature-Test"
+    Department  = "Engineering"
+    CostCenter  = "TestLab"
+  }
+}
+
+# Outputs to validate the configuration
+output "vpc_id" {
+  value = module.red-instance.vpc_id
+}
+
+output "subnet_id" {
+  value = module.red-instance.subnet_id
+}
+
+output "key_name" {
+  value = module.red-instance.key_name
+}
+
+output "key_fingerprint" {
+  value = module.red-instance.key_fingerprint
+}
+
+output "private_key_path" {
+  value = module.red-instance.private_key_path
+}
+
+output "public_ip" {
+  value = module.red-instance.public_ip
+}
+
+output "public_dns" {
+  value = module.red-instance.public_dns
+}
