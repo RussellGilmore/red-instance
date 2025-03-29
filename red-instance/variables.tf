@@ -21,13 +21,13 @@ variable "additional_tags" {
 variable "instance_type" {
   description = "The instance type to use for the instance"
   type        = string
-  default     = "t2.micro"
+  default     = "t4g.small"
 }
 
 variable "ami_name" {
   description = "The name of the AMI to use for the instance"
   type        = string
-  default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-20240701.1"
+  default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"
 }
 
 variable "ami_owner" {
