@@ -1,8 +1,24 @@
+variable "project_name" {
+  description = "Set the project name."
+  type        = string
+}
+
+variable "region" {
+  description = "Set the appropriate AWS region."
+  type        = string
+}
+
 module "red-instance" {
   source = "../../red-instance"
 
-  project_name = "Red-Instance-S3-Access"
-  region       = "us-east-1"
+  project_name = var.project_name
+  region       = var.region
+
+  # Custom AMI and instance configuration
+  ami_name      = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"
+  ami_owner     = "099720109477" # Canonical
+  instance_type = "t4g.small"
+  volume_size   = 50
 
   # Basic networking setup
   create_vpc   = true
@@ -10,7 +26,7 @@ module "red-instance" {
 
   # Enable S3 bucket access
   enable_s3_bucket_policy = true
-  s3_bucket_name          = "test-red-instance-bucket"
+  s3_bucket_name          = "red-infra-test-s3"
 
   # Disable other optional features
   enable_public_dns   = false

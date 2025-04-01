@@ -1,8 +1,18 @@
+variable "project_name" {
+  description = "Set the project name."
+  type        = string
+}
+
+variable "region" {
+  description = "Set the appropriate AWS region."
+  type        = string
+}
+
 module "red-instance" {
   source = "../../red-instance"
 
-  project_name = "Red-Instance-All-Features"
-  region       = "us-east-1"
+  project_name = var.project_name
+  region       = var.region
 
   # Custom AMI and instance configuration
   ami_name      = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"
@@ -16,16 +26,12 @@ module "red-instance" {
   create_ec2_key_pair     = true
   enable_public_dns       = true
   apex_domain             = "rag-space.com"
-  dns_name                = "red-instance.rag-space.com"
+  dns_name                = "full-force.rag-space.com"
   enable_s3_bucket_policy = true
-  s3_bucket_name          = "red-instance-full-test-bucket"
+  s3_bucket_name          = "red-infra-test-s3"
 
   # User data script
   user_data_script_path = "../../scripts/init.sh"
-
-  # Security settings
-  disable_api_termination = true
-  disable_api_stop        = true
 
   # Comprehensive security group rules
   ingress_rules = [

@@ -78,14 +78,12 @@ func TestS3AccessFeature(t *testing.T) {
 
 	// Generate a unique project name and S3 bucket name for the test
 	projectName := fmt.Sprintf("red-s3-%s", strings.ToLower(random.UniqueId()))
-	bucketName := fmt.Sprintf("test-bucket-%s", strings.ToLower(random.UniqueId()))
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "./s3-access",
 		Vars: map[string]interface{}{
-			"region":         awsRegion,
-			"project_name":   projectName,
-			"s3_bucket_name": bucketName,
+			"region":       awsRegion,
+			"project_name": projectName,
 		},
 	}
 
@@ -126,14 +124,12 @@ func TestAllFeaturesEnabled(t *testing.T) {
 
 	// Generate a unique project name and S3 bucket name for the test
 	projectName := fmt.Sprintf("red-full-%s", strings.ToLower(random.UniqueId()))
-	bucketName := fmt.Sprintf("full-test-bucket-%s", strings.ToLower(random.UniqueId()))
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "./full-force",
 		Vars: map[string]interface{}{
-			"region":         awsRegion,
-			"project_name":   projectName,
-			"s3_bucket_name": bucketName,
+			"region":       awsRegion,
+			"project_name": projectName,
 		},
 	}
 
