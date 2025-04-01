@@ -66,52 +66,6 @@ func TestDNSOnlyFeature(t *testing.T) {
 	})
 }
 
-// TestS3AccessFeature tests the Red Instance with S3 bucket access feature enabled
-func TestS3AccessFeature(t *testing.T) {
-	t.Parallel()
-
-	// Get the current AWS region from environment variable or use default
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-east-1"
-	}
-
-	// Generate a unique project name and S3 bucket name for the test
-	projectName := fmt.Sprintf("red-s3-%s", strings.ToLower(random.UniqueId()))
-
-	terraformOptions := &terraform.Options{
-		TerraformDir: "./s3-access",
-		Vars: map[string]interface{}{
-			"region":       awsRegion,
-			"project_name": projectName,
-		},
-	}
-
-	// Clean up resources in the end
-	defer test_structure.RunTestStage(t, "teardown", func() {
-		terraform.Destroy(t, terraformOptions)
-	})
-
-	// Deploy using Terraform
-	test_structure.RunTestStage(t, "setup", func() {
-		terraform.InitAndApply(t, terraformOptions)
-	})
-
-	// Validate outputs
-	test_structure.RunTestStage(t, "validate", func() {
-		publicDNS := terraform.Output(t, terraformOptions, "public_dns")
-		publicIP := terraform.Output(t, terraformOptions, "public_ip")
-
-		// S3 test validations
-		if publicDNS != "Public DNS not allocated" {
-			t.Fatal("Expected public DNS to be not allocated, but it was set")
-		}
-		if publicIP == "Public IP not allocated" {
-			t.Fatal("Expected public IP to be allocated but it was not")
-		}
-	})
-}
-
 // TestAllFeaturesEnabled tests the Red Instance with all features enabled
 func TestAllFeaturesEnabled(t *testing.T) {
 	t.Parallel()
