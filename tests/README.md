@@ -8,8 +8,7 @@ The tests are organized into different directories, each testing a different
 aspect or configuration of the module:
 
 1. **dns-only** - Tests with only DNS features enabled
-2. **s3-access** - Tests with only S3 bucket access enabled
-3. **full-features** - Tests with all features enabled and customized
+2. **full-features** - Tests with all features enabled and customized
 
 ## Running Tests
 
