@@ -8,11 +8,17 @@ variable "region" {
   type        = string
 }
 
+variable "instance_name" {
+  description = "The name of the instance"
+  type        = string
+}
+
 module "red-instance" {
   source = "../../red-instance"
 
-  project_name = var.project_name
-  region       = var.region
+  project_name  = var.project_name
+  region        = var.region
+  instance_name = var.instance_name
 
   # Custom AMI and instance configuration
   ami_name      = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"

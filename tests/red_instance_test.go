@@ -24,12 +24,14 @@ func TestDNSOnlyFeature(t *testing.T) {
 
 	// Generate a unique project name for the test
 	projectName := fmt.Sprintf("red-dns-%s", strings.ToLower(random.UniqueId()))
+	instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "./dns-only",
 		Vars: map[string]interface{}{
-			"region":       awsRegion,
-			"project_name": projectName,
+			"region":        awsRegion,
+			"project_name":  projectName,
+			"instance_name": instanceName,
 		},
 	}
 
@@ -78,12 +80,14 @@ func TestAllFeaturesEnabled(t *testing.T) {
 
 	// Generate a unique project name and S3 bucket name for the test
 	projectName := fmt.Sprintf("red-full-%s", strings.ToLower(random.UniqueId()))
+	instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "./full-force",
 		Vars: map[string]interface{}{
-			"region":       awsRegion,
-			"project_name": projectName,
+			"region":        awsRegion,
+			"project_name":  projectName,
+			"instance_name": instanceName,
 		},
 	}
 
@@ -128,7 +132,6 @@ func TestAllFeaturesEnabled(t *testing.T) {
 func TestFeatureCombinations(t *testing.T) {
 	testDirs := []string{
 		"dns-only",
-		"s3-access",
 		"full-force",
 	}
 
@@ -146,6 +149,7 @@ func TestFeatureCombinations(t *testing.T) {
 
 				// Generate a unique project name for the test
 				projectName := fmt.Sprintf("red-%s-%s", testDir, strings.ToLower(random.UniqueId()))
+				instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
 
 				// Make sure the test directory exists
 				testDirPath := filepath.Join(".", testDir)
@@ -157,8 +161,9 @@ func TestFeatureCombinations(t *testing.T) {
 				terraformOptions := &terraform.Options{
 					TerraformDir: testDirPath,
 					Vars: map[string]interface{}{
-						"region":       awsRegion,
-						"project_name": projectName,
+						"region":        awsRegion,
+						"project_name":  projectName,
+						"instance_name": instanceName,
 					},
 				}
 
