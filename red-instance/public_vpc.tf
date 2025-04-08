@@ -9,7 +9,8 @@ resource "aws_vpc" "main" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance-vpc"
+      Name    = "${lower(var.instance_name)}-red-instance-vpc",
+      Project = var.project_name
     },
     var.additional_tags,
   )
@@ -24,7 +25,8 @@ resource "aws_subnet" "public" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance-public-subnet"
+      Name    = "${lower(var.instance_name)}-red-instance-public-subnet"
+      Project = var.project_name
     },
     var.additional_tags,
   )
@@ -37,7 +39,8 @@ resource "aws_internet_gateway" "igw" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance-igw"
+      Name    = "${lower(var.instance_name)}-red-instance-igw",
+      Project = var.project_name
     },
     var.additional_tags,
   )
@@ -55,7 +58,8 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance-public-route-table"
+      Name    = "${lower(var.instance_name)}-red-instance-public-route-table",
+      Project = var.project_name
     },
     var.additional_tags,
   )

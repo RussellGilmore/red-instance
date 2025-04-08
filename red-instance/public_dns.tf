@@ -13,7 +13,8 @@ resource "aws_eip" "red_instance_eip" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance-eip"
+      Name    = "${lower(var.instance_name)}-red-instance-eip"
+      Project = var.project_name
     },
     var.additional_tags,
   )

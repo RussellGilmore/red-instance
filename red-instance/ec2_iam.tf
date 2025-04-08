@@ -2,13 +2,13 @@
 
 # The role has a trust policy that allows EC2 instances to assume the role.
 resource "aws_iam_instance_profile" "red_instance_profile" {
-  name = "${lower(var.project_name)}-red-instance-profile"
+  name = "${lower(var.instance_name)}-red-instance-profile"
   role = aws_iam_role.red_role.name
 }
 
 # Create the IAM role for the Red Instance
 resource "aws_iam_role" "red_role" {
-  name               = "${lower(var.project_name)}-role"
+  name               = "${lower(var.instance_name)}-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -33,7 +33,7 @@ resource "aws_iam_role_policy_attachment" "red_ssm_policy_attachment" {
 
 # Role policy for S3 bucket access
 resource "aws_iam_role_policy" "s3_bucket_policy" {
-  name = "${lower(var.project_name)}-s3-bucket-policy"
+  name = "${lower(var.instance_name)}-s3-bucket-policy"
   role = aws_iam_role.red_role.name
 
   count = var.enable_s3_bucket_policy ? 1 : 0
