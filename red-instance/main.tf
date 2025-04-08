@@ -33,7 +33,7 @@ data "aws_ami" "red_ami" {
 # Dynamic block for creating ingress rules
 resource "aws_security_group" "allow_ssh" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
-  name   = "${lower(var.project_name)}-ingress-sg"
+  name   = "${lower(var.instance_name)}-ingress-sg"
 
   # Dynamic ingress rules
   dynamic "ingress" {
@@ -55,7 +55,8 @@ resource "aws_security_group" "allow_ssh" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance"
+      Name    = var.instance_name,
+      Project = var.project_name
     },
     var.additional_tags,
   )
@@ -89,7 +90,8 @@ resource "aws_instance" "red-instance" {
 
   tags = merge(
     {
-      Name = "${lower(var.project_name)}-red-instance"
+      Name    = var.instance_name,
+      Project = var.project_name
     },
     var.additional_tags,
   )
