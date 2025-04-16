@@ -1,16 +1,38 @@
 #!/bin/bash
 
-# Script to install AWS SSM Agent and AWS CLI on SUSE or Ubuntu Linux servers
+# Script to install AWS CLI on Ubuntu Linux servers
 # Supports both ARM and AMD64 architectures
 
+# Exit immediately if a command exits with a non-zero status
 set -e
 
-echo "AWS SSM Agent and AWS CLI Installation Script"
-echo "============================================"
+# Function to check if script is running with sudo privileges
+check_sudo() {
+    if [ "$(id -u)" -ne 0 ]; then
+        echo "Error: This script must be run with sudo privileges"
+        echo "Please run: sudo $0"
+        exit 1
+    fi
+}
+
+# Function to handle errors
+handle_error() {
+    echo "Error occurred at line $1"
+    exit 1
+}
+
+# Set up error handling
+trap 'handle_error $LINENO' ERR
+
+echo "AWS CLI Installation Script for Ubuntu"
+echo "====================================="
+
+# Check for sudo privileges
+check_sudo
 
 # Detect architecture
 ARCH=$(uname -m)
-case ${ARCH} in
+case "${ARCH}" in
     x86_64)
         ARCH="amd64"
         echo "Detected AMD64 architecture"
@@ -25,114 +47,106 @@ case ${ARCH} in
         ;;
 esac
 
-# Detect Linux distribution
+# Verify we're running on Ubuntu
 if [ -f /etc/os-release ]; then
     . /etc/os-release
-    OS=${ID}
-    VERSION_ID=${VERSION_ID}
-    echo "Detected ${OS} ${VERSION_ID}"
+    if [ "${ID}" != "ubuntu" ]; then
+        echo "Error: This script is designed for Ubuntu only"
+        echo "Detected OS: ${ID}"
+        exit 1
+    fi
+    echo "Detected Ubuntu ${VERSION_ID}"
 else
     echo "Error: Unable to detect Linux distribution"
     exit 1
 fi
 
-# Install AWS SSM Agent and AWS CLI based on detected OS and architecture
-case ${OS} in
-    ubuntu)
-        echo "Setting up on Ubuntu..."
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
 
-        # Install dependencies
-        apt-get update
-        apt-get install -y wget unzip curl
+echo "Setting up on Ubuntu..."
 
-        # Install AWS SSM Agent
-        echo "Installing AWS SSM Agent..."
-        if [ "${ARCH}" = "amd64" ]; then
-            wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
-            dpkg -i amazon-ssm-agent.deb
-            rm amazon-ssm-agent.deb
-        elif [ "${ARCH}" = "arm64" ]; then
-            wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_arm64/amazon-ssm-agent.deb
-            dpkg -i amazon-ssm-agent.deb
-            rm amazon-ssm-agent.deb
-        fi
+# Install dependencies with error checking
+echo "Installing dependencies..."
+apt-get update || { echo "Failed to update package lists"; exit 1; }
+apt-get install -y wget unzip curl htop jq yq || { echo "Failed to install dependencies"; exit 1; }
 
-        # Enable and start the SSM service
-        systemctl enable amazon-ssm-agent
-        systemctl start amazon-ssm-agent
-
-        # Install AWS CLI v2
-        echo "Installing AWS CLI v2..."
-        if [ "${ARCH}" = "amd64" ]; then
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        elif [ "${ARCH}" = "arm64" ]; then
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
-        fi
-
-        unzip -q awscliv2.zip
-        ./aws/install
-        rm -rf aws awscliv2.zip
-        ;;
-
-    sles|suse|opensuse*)
-        echo "Setting up on SUSE..."
-
-        # Install dependencies
-        zypper --non-interactive install wget unzip curl
-
-        # Install AWS SSM Agent
-        echo "Installing AWS SSM Agent..."
-        if [ "${ARCH}" = "amd64" ]; then
-            wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-            rpm -U amazon-ssm-agent.rpm
-            rm amazon-ssm-agent.rpm
-        elif [ "${ARCH}" = "arm64" ]; then
-            wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_arm64/amazon-ssm-agent.rpm
-            rpm -U amazon-ssm-agent.rpm
-            rm amazon-ssm-agent.rpm
-        fi
-
-        # Enable and start the SSM service
-        systemctl enable amazon-ssm-agent
-        systemctl start amazon-ssm-agent
-
-        # Install AWS CLI v2
-        echo "Installing AWS CLI v2..."
-        if [ "${ARCH}" = "amd64" ]; then
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        elif [ "${ARCH}" = "arm64" ]; then
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
-        fi
-
-        unzip -q awscliv2.zip
-        ./aws/install
-        rm -rf aws awscliv2.zip
-        ;;
-
-    *)
-        echo "Error: Unsupported Linux distribution: ${OS}"
+# Verify dependencies were installed
+for cmd in wget unzip curl; do
+    if ! command_exists "${cmd}"; then
+        echo "Error: Required command '${cmd}' not found after installation"
         exit 1
-        ;;
-esac
+    fi
+done
+
+# Check for existing AWS CLI installation
+if command_exists aws; then
+    current_version=$(aws --version 2>&1 | cut -d/ -f2 | cut -d' ' -f1)
+    echo "AWS CLI is already installed (version ${current_version})"
+    read -p "Do you want to proceed with reinstallation? (y/n): " -n 1 -r REPLY
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping AWS CLI installation"
+        AWS_CLI_SKIP=true
+    else
+        echo "Will reinstall AWS CLI"
+        AWS_CLI_SKIP=false
+    fi
+else
+    AWS_CLI_SKIP=false
+fi
+
+# Install AWS CLI v2 if not skipped
+if [ "${AWS_CLI_SKIP}" = "false" ]; then
+    echo "Installing AWS CLI v2..."
+
+    # Set download URL based on architecture
+    if [ "${ARCH}" = "amd64" ]; then
+        CLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    elif [ "${ARCH}" = "arm64" ]; then
+        CLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"
+    fi
+
+    echo "Downloading AWS CLI from ${CLI_URL}..."
+    curl "${CLI_URL}" -o "awscliv2.zip" || { echo "Failed to download AWS CLI"; exit 1; }
+
+    echo "Extracting AWS CLI..."
+    unzip -q awscliv2.zip || { echo "Failed to extract AWS CLI package"; exit 1; }
+
+    echo "Installing AWS CLI..."
+    ./aws/install --update || { echo "Failed to install AWS CLI"; exit 1; }
+
+    echo "Cleaning up AWS CLI installation files..."
+    rm -rf aws awscliv2.zip
+
+    # Create symbolic link if needed
+    if ! command_exists aws; then
+        echo "Creating symbolic link for AWS CLI..."
+        ln -sf /usr/local/bin/aws /usr/bin/aws
+    fi
+fi
 
 # Initialize success flag
 INSTALL_SUCCESS=true
 
-# Verify installations
-echo "Verifying installations..."
-
-# Check SSM Agent
-if systemctl is-active --quiet amazon-ssm-agent; then
-    echo "✓ AWS SSM Agent is installed and running"
-else
-    echo "✗ AWS SSM Agent installation failed or service not running"
-    INSTALL_SUCCESS=false
-fi
+# Verify installation
+echo "Verifying installation..."
 
 # Check AWS CLI
-if command -v aws >/dev/null 2>&1; then
-    AWS_CLI_VERSION=$(aws --version)
+if [ "${AWS_CLI_SKIP}" = "false" ] && command_exists aws; then
+    AWS_CLI_VERSION=$(aws --version 2>&1)
     echo "✓ AWS CLI is installed: ${AWS_CLI_VERSION}"
+
+    # Verify AWS CLI is in PATH
+    if ! echo "${PATH}" | grep -q "/usr/local/bin"; then
+        echo "Note: You may need to add /usr/local/bin to your PATH"
+        echo "      You can do this by adding the following line to your ~/.bashrc file:"
+        echo "      export PATH=\$PATH:/usr/local/bin"
+    fi
+elif [ "${AWS_CLI_SKIP}" = "true" ]; then
+    echo "✓ AWS CLI installation was skipped as requested"
 else
     echo "✗ AWS CLI installation failed"
     INSTALL_SUCCESS=false
