@@ -5,12 +5,14 @@ module "red-instance" {
   region       = "us-east-1"
   ingress_rules = [
     {
+      description = "Allow SSH access from anywhere"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     },
     {
+      description = "Allow HTTP access from anywhere"
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"

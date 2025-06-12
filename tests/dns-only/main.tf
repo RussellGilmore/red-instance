@@ -42,6 +42,7 @@ module "red-instance" {
   # Only allow SSH access
   ingress_rules = [
     {
+      description = "Allow SSH access from anywhere"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"

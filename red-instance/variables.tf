@@ -68,6 +68,7 @@ variable "volume_size" {
 variable "ingress_rules" {
   description = "List of ingress rules"
   type = list(object({
+    description = string
     from_port   = number
     to_port     = number
     protocol    = string
@@ -75,6 +76,7 @@ variable "ingress_rules" {
   }))
   default = [
     {
+      description = "Allow SSH access"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"

@@ -42,24 +42,28 @@ module "red-instance" {
   # Comprehensive security group rules
   ingress_rules = [
     {
+      description = "Allow SSH access from the VPC"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["10.0.0.0/16"]
     },
     {
+      description = "Allow HTTP access from anywhere"
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     },
     {
+      description = "Allow HTTPS access from anywhere"
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     },
     {
+      description = "Allow custom application traffic"
       from_port   = 8000
       to_port     = 9000
       protocol    = "tcp"
