@@ -1,5 +1,10 @@
 # Red Instance
 
+**Requirements:**
+
+1. Terraform 1.12.1
+2. Trivy 0.63.0
+
 ## [![Red EC2 Module](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml/badge.svg?branch=main)](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml)
 
 A EC2 module module designed to be practical for casual use.
