@@ -31,6 +31,10 @@ data "aws_ami" "red_ami" {
 }
 
 # Dynamic block for creating ingress rules
+# Justification: This is a dynamic block to allow flexible ingress rules configuration
+# Justification: This is meant to be a public instance, hence the open ingress rules
+# trivy:ignore:AVD-AWS-0099
+# trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "allow_ssh" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name   = "${lower(var.instance_name)}-ingress-sg"
@@ -48,6 +52,7 @@ resource "aws_security_group" "allow_ssh" {
   }
   # Allows all egress traffic
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"

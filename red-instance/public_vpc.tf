@@ -1,6 +1,8 @@
 # This file creates a VPC, a public subnet, an internet gateway, a route table, and associates the route table with the subnet.
 
 # The resources are created conditionally based on the value of the create_vpc variable.
+# Justification: This is for development purposes, Flow Logs and other features are not required for a red instance.
+# trivy:ignore:AVD-AWS-0178
 resource "aws_vpc" "main" {
   count                = var.create_vpc ? 1 : 0
   cidr_block           = "10.0.0.0/16"
@@ -17,6 +19,8 @@ resource "aws_vpc" "main" {
 }
 
 # Create a public subnet
+# Justification: This is a public subnet for the red instance
+# trivy:ignore:AVD-AWS-0164
 resource "aws_subnet" "public" {
   count                   = var.create_vpc ? 1 : 0
   vpc_id                  = aws_vpc.main[0].id
