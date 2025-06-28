@@ -21,8 +21,6 @@ module "red-instance" {
   instance_name = var.instance_name
 
   # Custom AMI and instance configuration
-  ami_name      = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"
-  ami_owner     = "099720109477" # Canonical
   instance_type = "m6g.medium"
   volume_size   = 50
 
