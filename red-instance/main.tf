@@ -35,7 +35,7 @@ data "aws_ami" "red_ami" {
 # Justification: This is meant to be a public instance, hence the open ingress rules
 # trivy:ignore:AVD-AWS-0099
 # trivy:ignore:AVD-AWS-0104
-resource "aws_security_group" "allow_ssh" {
+resource "aws_security_group" "red_sg" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name   = "${lower(var.instance_name)}-ingress-sg"
 
@@ -73,7 +73,7 @@ resource "aws_instance" "red-instance" {
   ami                     = data.aws_ami.red_ami.id
   instance_type           = var.instance_type
   subnet_id               = var.create_vpc ? aws_subnet.public[0].id : var.subnet_id
-  vpc_security_group_ids  = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids  = [aws_security_group.red_sg.id]
   key_name                = var.create_ec2_key_pair ? aws_key_pair.red_key[0].key_name : null
   disable_api_termination = var.disable_api_termination
   disable_api_stop        = var.disable_api_stop
