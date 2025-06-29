@@ -21,8 +21,8 @@ module "red-instance" {
   instance_name = var.instance_name
 
   # Custom AMI and instance configuration
-  instance_type = "m6g.medium"
-  volume_size   = 50
+  instance_type = "t4g.small"
+  volume_size   = 16
 
   # Enable all optional features
   create_vpc              = true
