@@ -65,12 +65,13 @@ No modules.
 | [aws_route53_record.red_instance_dns](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/route53_record) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/route_table) | resource |
 | [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/route_table_association) | resource |
-| [aws_security_group.allow_ssh](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/security_group) | resource |
+| [aws_security_group.red_sg](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/security_group) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/subnet) | resource |
 | [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/resources/vpc) | resource |
 | [local_file.red_private_key_file](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
 | [tls_private_key.red_private_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [aws_ami.red_ami](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/data-sources/ami) | data source |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/data-sources/availability_zones) | data source |
 | [aws_route53_zone.zone](https://registry.terraform.io/providers/hashicorp/aws/6.0.0/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
@@ -79,7 +80,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Additional tags to apply to the resources | `map(string)` | `{}` | no |
 | <a name="input_allocate_eip"></a> [allocate\_eip](#input\_allocate\_eip) | Controls whether an Elastic IP should be allocated | `bool` | `true` | no |
-| <a name="input_ami_name"></a> [ami\_name](#input\_ami\_name) | The name of the AMI to use for the instance | `string` | `"ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250305"` | no |
+| <a name="input_ami_name"></a> [ami\_name](#input\_ami\_name) | The name of the AMI to use for the instance | `string` | `"ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250610"` | no |
 | <a name="input_ami_owner"></a> [ami\_owner](#input\_ami\_owner) | The owner of the AMI to use for the instance | `string` | `"099720109477"` | no |
 | <a name="input_apex_domain"></a> [apex\_domain](#input\_apex\_domain) | The apex domain to use for the public DNS record | `string` | `""` | no |
 | <a name="input_create_ec2_key_pair"></a> [create\_ec2\_key\_pair](#input\_create\_ec2\_key\_pair) | Controls whether an EC2 key pair should be created | `bool` | `false` | no |

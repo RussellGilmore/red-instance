@@ -15,7 +15,7 @@ provider "aws" {
 
 # Data source to get the Red Instance AMI
 data "aws_ami" "red_ami" {
-  most_recent = true
+  most_recent        = true
   include_deprecated = true
 
   filter {
