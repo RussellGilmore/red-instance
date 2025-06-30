@@ -25,8 +25,9 @@ module "red-instance" {
   volume_size   = 16
 
   # Basic networking setup
-  create_vpc   = true
-  allocate_eip = true
+  create_vpc        = true
+  availability_zone = "us-east-1a"
+  allocate_eip      = true
 
   # Enable DNS but no other optional features
   enable_public_dns = true

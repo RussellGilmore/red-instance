@@ -82,6 +82,12 @@ variable "user_data_script_path" {
   default     = ""
 }
 
+variable "availability_zone" {
+  description = "The availability zone to use for the subnet. Leave empty to use the default behavior."
+  type        = string
+  default     = ""
+}
+
 ####################################################################################################
 # Optional Variables for Red Instance Features
 variable "create_vpc" {

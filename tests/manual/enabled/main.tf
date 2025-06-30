@@ -27,6 +27,7 @@ module "red-instance" {
   dns_name                = "red-instance.rag-space.com"
   create_ec2_key_pair     = true
   create_vpc              = true
+  availability_zone       = "us-east-1a"
 
   additional_tags = {
     Environment = "Has-VPC"

@@ -1,14 +1,3 @@
-# This file creates a VPC, a public subnet, an internet gateway, a route table, and associates the route table with the subnet.
-
-# Data source to get available AZs that support the instance type
-data "aws_availability_zones" "available" {
-  count = var.create_vpc ? 1 : 0
-  state = "available"
-
-  # Filter to exclude AZs that typically don't support ARM instances
-  exclude_names = ["us-east-1e"] # Add other problematic AZs as needed
-}
-
 # The resources are created conditionally based on the value of the create_vpc variable.
 # Justification: This is for development purposes, Flow Logs and other features are not required for a red instance.
 # trivy:ignore:AVD-AWS-0178
@@ -27,7 +16,7 @@ resource "aws_vpc" "main" {
   )
 }
 
-# Create a public subnet with explicit AZ
+# Create a public subnet with smart AZ selection
 # Justification: This is a public subnet for the red instance
 # trivy:ignore:AVD-AWS-0164
 resource "aws_subnet" "public" {
@@ -36,8 +25,8 @@ resource "aws_subnet" "public" {
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 
-  # Use the first available AZ that supports ARM instances
-  availability_zone = data.aws_availability_zones.available[0].names[0]
+  # Only specify AZ if explicitly provided
+  availability_zone = var.availability_zone != "" ? var.availability_zone : null
 
   tags = merge(
     {

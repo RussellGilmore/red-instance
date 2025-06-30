@@ -26,6 +26,7 @@ module "red-instance" {
 
   # Enable all optional features
   create_vpc              = true
+  availability_zone       = "us-east-1a"
   allocate_eip            = true
   create_ec2_key_pair     = true
   enable_public_dns       = true
