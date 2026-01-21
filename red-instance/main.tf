@@ -66,6 +66,7 @@ resource "aws_security_group" "red_sg" {
       Project = var.project_name
     },
     var.additional_tags,
+    var.instance_tags,
   )
 }
 

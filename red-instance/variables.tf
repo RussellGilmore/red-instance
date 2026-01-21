@@ -23,6 +23,12 @@ variable "additional_tags" {
   default     = {}
 }
 
+variable "instance_tags" {
+  description = "Tags to apply only to the EC2 instance resource"
+  type        = map(string)
+  default     = {}
+}
+
 variable "instance_type" {
   description = "The instance type to use for the instance"
   type        = string
