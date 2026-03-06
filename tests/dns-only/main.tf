@@ -32,7 +32,7 @@ module "red-instance" {
   # Enable DNS but no other optional features
   enable_public_dns = true
   apex_domain       = "rag-space.com"
-  dns_name          = "red-instance-dns-test.rag-space.com"
+  dns_name          = "${var.instance_name}.rag-space.com"
 
   # Disable other optional features
   create_ec2_key_pair     = false

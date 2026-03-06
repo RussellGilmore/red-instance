@@ -31,7 +31,7 @@ module "red-instance" {
   create_ec2_key_pair     = true
   enable_public_dns       = true
   apex_domain             = "rag-space.com"
-  dns_name                = "full-force.rag-space.com"
+  dns_name                = "${var.instance_name}.rag-space.com"
   enable_s3_bucket_policy = true
   s3_bucket_name          = "red-infra-test-s3"
 
