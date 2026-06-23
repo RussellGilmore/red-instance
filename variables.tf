@@ -1,78 +1,17 @@
 ####################################################################################################
 # Required Variables
 variable "project_name" {
-  description = "Set the project name."
-  type        = string
-}
-
-variable "region" {
-  description = "Set the appropriate AWS region."
+  description = "Project name used for naming and the Project tag."
   type        = string
 }
 
 variable "instance_name" {
-  description = "The name of the instance"
+  description = "The name of the instance."
   type        = string
-}
-
-####################################################################################################
-# Optional Red Instance Variables
-variable "additional_tags" {
-  description = "Additional tags to apply to the resources"
-  type        = map(string)
-  default     = {}
-}
-
-variable "instance_tags" {
-  description = "Tags to apply only to the EC2 instance resource"
-  type        = map(string)
-  default     = {}
-}
-
-variable "instance_type" {
-  description = "The instance type to use for the instance"
-  type        = string
-  default     = "t4g.small"
-}
-
-variable "ami_name" {
-  description = "The name of the AMI to use for the instance"
-  type        = string
-  default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250610"
-}
-
-variable "ami_owner" {
-  description = "The owner of the AMI to use for the instance"
-  type        = string
-  default     = "099720109477"
-}
-
-variable "allocate_eip" {
-  description = "Controls whether an Elastic IP should be allocated"
-  type        = bool
-  default     = true
-}
-
-variable "disable_api_termination" {
-  description = "Controls whether API termination is disabled"
-  type        = bool
-  default     = false
-}
-
-variable "disable_api_stop" {
-  description = "Controls whether API stop is disabled"
-  type        = bool
-  default     = false
-}
-
-variable "volume_size" {
-  description = "The size of the root volume in GB"
-  type        = number
-  default     = 30
 }
 
 variable "ingress_rules" {
-  description = "List of ingress rules"
+  description = "List of ingress rules for the instance security group. Access is via SSM Session Manager by default; only open inbound ports you actually serve (e.g. 80/443)."
   type = list(object({
     description = string
     from_port   = number
@@ -82,70 +21,126 @@ variable "ingress_rules" {
   }))
 }
 
-variable "user_data_script_path" {
-  description = "The path to the user data script"
-  type        = string
-  default     = ""
+####################################################################################################
+# Tagging
+variable "additional_tags" {
+  description = "Additional tags to apply to all resources created by this module."
+  type        = map(string)
+  default     = {}
 }
 
-variable "availability_zone" {
-  description = "The availability zone to use for the subnet. Leave empty to use the default behavior."
-  type        = string
-  default     = ""
+variable "instance_tags" {
+  description = "Tags to apply only to the EC2 instance resource."
+  type        = map(string)
+  default     = {}
 }
 
 ####################################################################################################
-# Optional Variables for Red Instance Features
+# Instance Configuration
+variable "instance_type" {
+  description = "The instance type to use for the instance."
+  type        = string
+  default     = "t4g.small"
+}
+
+variable "ami_name" {
+  description = "The name (or name pattern) of the AMI to use for the instance."
+  type        = string
+  default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-20250610"
+}
+
+variable "ami_owner" {
+  description = "The owner account ID of the AMI."
+  type        = string
+  default     = "099720109477"
+}
+
+variable "volume_size" {
+  description = "The size of the root volume in GB."
+  type        = number
+  default     = 30
+}
+
+variable "user_data_script_path" {
+  description = "Path to a user data script to run on first boot."
+  type        = string
+  default     = ""
+}
+
+variable "disable_api_termination" {
+  description = "Controls whether API termination is disabled."
+  type        = bool
+  default     = false
+}
+
+variable "disable_api_stop" {
+  description = "Controls whether API stop is disabled."
+  type        = bool
+  default     = false
+}
+
+variable "allocate_eip" {
+  description = "Controls whether an Elastic IP should be allocated."
+  type        = bool
+  default     = true
+}
+
+####################################################################################################
+# Networking
 variable "create_vpc" {
-  description = "Controls whether networking resources should be created for public exposed server"
+  description = "Create a minimal public VPC (single subnet + IGW) for the instance. Set false to place the instance in an existing VPC via vpc_id/subnet_id."
   type        = bool
   default     = true
 }
 
 variable "vpc_id" {
-  description = "The ID of the VPC to use for the instance"
+  description = "ID of an existing VPC to use when create_vpc is false."
   type        = string
   default     = ""
 }
 
 variable "subnet_id" {
-  description = "The ID of the subnet to use for the instance"
+  description = "ID of an existing subnet to use when create_vpc is false."
   type        = string
   default     = ""
 }
 
-variable "create_ec2_key_pair" {
-  description = "Controls whether an EC2 key pair should be created"
+variable "availability_zone" {
+  description = "Availability zone for the created subnet. Leave empty for default placement."
+  type        = string
+  default     = ""
+}
+
+####################################################################################################
+# S3 Access
+variable "enable_s3_bucket_policy" {
+  description = "Attach an S3 access policy (scoped to s3_bucket_name) to the instance role."
   type        = bool
   default     = false
 }
 
 variable "s3_bucket_name" {
-  description = "The name of the S3 bucket to use for the instance"
+  description = "Name of the S3 bucket the instance role may access."
   type        = string
   default     = ""
 }
 
-variable "enable_s3_bucket_policy" {
-  description = "Controls whether an S3 bucket policy should be attached to the instance role"
-  type        = bool
-  default     = false
-}
-
+####################################################################################################
+# Public DNS
 variable "enable_public_dns" {
-  description = "Controls whether a public DNS record should be created"
+  description = "Create a public Route53 A record pointing at the instance's EIP."
   type        = bool
   default     = false
 }
 
 variable "apex_domain" {
-  description = "The apex domain to use for the public DNS record"
+  description = "Apex domain whose hosted zone holds the DNS record."
   type        = string
   default     = ""
 }
 
 variable "dns_name" {
-  description = "The DNS name to use for the public DNS record"
+  description = "FQDN for the public DNS record."
   type        = string
   default     = ""
 }

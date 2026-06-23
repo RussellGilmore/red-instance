@@ -1,18 +1,3 @@
-# Contains the main resource block for creating the Red Instance
-
-# Provider configuration with default tags
-provider "aws" {
-  region = var.region
-
-  default_tags {
-    tags = {
-      Orchestrator = "Terraform"
-      Artifact     = "Red-Instance"
-      Project      = var.project_name
-    }
-  }
-}
-
 # Data source to get the Red Instance AMI
 data "aws_ami" "red_ami" {
   most_recent        = true
@@ -31,16 +16,16 @@ data "aws_ami" "red_ami" {
   owners = [var.ami_owner]
 }
 
-# Dynamic block for creating ingress rules
-# Justification: This is a dynamic block to allow flexible ingress rules configuration
-# Justification: This is meant to be a public instance, hence the open ingress rules
-# trivy:ignore:AVD-AWS-0099
-# trivy:ignore:AVD-AWS-0104
+# Security group for the instance.
+# Inbound access is via SSM Session Manager by default — only the ingress
+# rules you explicitly pass are opened. Egress is open so SSM and package
+# updates work.
+# Justification: ingress is caller-controlled and intended for public services.
+# trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "red_sg" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name   = "${lower(var.instance_name)}-ingress-sg"
 
-  # Dynamic ingress rules
   dynamic "ingress" {
     for_each = var.ingress_rules
     content {
@@ -51,7 +36,7 @@ resource "aws_security_group" "red_sg" {
       cidr_blocks = ingress.value.cidr_blocks
     }
   }
-  # Allows all egress traffic
+
   egress {
     description = "Allow all outbound traffic"
     from_port   = 0
@@ -61,22 +46,20 @@ resource "aws_security_group" "red_sg" {
   }
 
   tags = merge(
-    {
-      Name    = var.instance_name,
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = "${lower(var.instance_name)}-ingress-sg" },
     var.instance_tags,
   )
 }
 
-# The Red Instance main resource block
+# The Red Instance main resource block.
+# Access is via SSM Session Manager (see the instance profile in ec2_iam.tf);
+# no SSH key pair is created or attached.
 resource "aws_instance" "red-instance" {
   ami                     = data.aws_ami.red_ami.id
   instance_type           = var.instance_type
   subnet_id               = var.create_vpc ? aws_subnet.public[0].id : var.subnet_id
   vpc_security_group_ids  = [aws_security_group.red_sg.id]
-  key_name                = var.create_ec2_key_pair ? aws_key_pair.red_key[0].key_name : null
   disable_api_termination = var.disable_api_termination
   disable_api_stop        = var.disable_api_stop
   user_data               = var.user_data_script_path != "" ? file(var.user_data_script_path) : null
@@ -97,10 +80,8 @@ resource "aws_instance" "red-instance" {
   }
 
   tags = merge(
-    {
-      Name    = var.instance_name,
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = var.instance_name },
+    var.instance_tags,
   )
 }
