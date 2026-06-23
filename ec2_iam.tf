@@ -4,6 +4,8 @@
 resource "aws_iam_instance_profile" "red_instance_profile" {
   name = "${lower(var.instance_name)}-red-instance-profile"
   role = aws_iam_role.red_role.name
+
+  tags = local.tags
 }
 
 # Create the IAM role for the Red Instance
