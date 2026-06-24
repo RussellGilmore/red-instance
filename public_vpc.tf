@@ -8,11 +8,8 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
 
   tags = merge(
-    {
-      Name    = "${lower(var.instance_name)}-red-instance-vpc",
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = "${lower(var.instance_name)}-red-instance-vpc" },
   )
 }
 
@@ -29,11 +26,8 @@ resource "aws_subnet" "public" {
   availability_zone = var.availability_zone != "" ? var.availability_zone : null
 
   tags = merge(
-    {
-      Name    = "${lower(var.instance_name)}-red-instance-public-subnet"
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = "${lower(var.instance_name)}-red-instance-public-subnet" },
   )
 }
 
@@ -43,11 +37,8 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main[0].id
 
   tags = merge(
-    {
-      Name    = "${lower(var.instance_name)}-red-instance-igw",
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = "${lower(var.instance_name)}-red-instance-igw" },
   )
 }
 
@@ -62,11 +53,8 @@ resource "aws_route_table" "public" {
   }
 
   tags = merge(
-    {
-      Name    = "${lower(var.instance_name)}-red-instance-public-route-table",
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = "${lower(var.instance_name)}-red-instance-public-route-table" },
   )
 }
 
