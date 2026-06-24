@@ -10,7 +10,10 @@ resource "aws_iam_instance_profile" "red_instance_profile" {
 
 # Create the IAM role for the Red Instance
 resource "aws_iam_role" "red_role" {
-  name               = "${lower(var.instance_name)}-role"
+  name = "${lower(var.instance_name)}-role"
+
+  tags = local.tags
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -27,7 +30,8 @@ resource "aws_iam_role" "red_role" {
 EOF
 }
 
-# Attach the AmazonSSMManagedInstanceCore policy to the role. All Red Instances will have SSM access.
+# AmazonSSMManagedInstanceCore enables Session Manager access. This is the
+# primary access path for the instance — no SSH key pair is used.
 resource "aws_iam_role_policy_attachment" "red_ssm_policy_attachment" {
   role       = aws_iam_role.red_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
