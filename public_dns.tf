@@ -12,11 +12,8 @@ resource "aws_eip" "red_instance_eip" {
   instance = aws_instance.red-instance.id
 
   tags = merge(
-    {
-      Name    = "${lower(var.instance_name)}-red-instance-eip"
-      Project = var.project_name
-    },
-    var.additional_tags,
+    local.tags,
+    { Name = "${lower(var.instance_name)}-red-instance-eip" },
   )
 }
 
