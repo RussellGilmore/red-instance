@@ -1,8 +1,13 @@
 # Red Instance
 
+## [![Red EC2 Module](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml/badge.svg?branch=main)](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml)
+
+A practical EC2 module — **SSM-only by design**. No SSH keys are created,
+stored, or attached; you reach the instance through AWS Session Manager.
+
 **Requirements:**
 
-1. Terraform 1.14.6
+1. Terraform >= 1.15.0
 2. Trivy >= 0.68.2
 
 Trivy can be installed via Homebrew on macOS with the command:
@@ -11,23 +16,57 @@ Trivy can be installed via Homebrew on macOS with the command:
 brew install aquasecurity/trivy/trivy
 ```
 
-## [![Red EC2 Module](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml/badge.svg?branch=main)](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml)
+## Security posture
 
-A EC2 module module designed to be practical for casual use.
+-   **No SSH key pair** — access is via SSM Session Manager. No private key is
+    generated, written to disk, or stored in Terraform state.
+-   IMDSv2 required; root EBS volume encrypted
+-   Instance role limited to `AmazonSSMManagedInstanceCore` plus an optional
+    bucket-scoped S3 policy
+-   You open only the ingress ports you serve — examples open 80/443, never 22
+-   Scanned with Trivy and gitleaks; integration-tested with Terratest
 
 ## Features
 
 1. Gives to ability for create a EC2 Instance
 2. EC2 is already setup for SSM Agent to be installed
-3. Creates Key for SSH Access
-4. Dynamically Create Ingress Security Rules
-5. Optionally create all network infrastructure needed for public access
-6. Optionally create public DNS record for the Red Instance
-7. Optionally pass user data into instance creation
-8. Optionally enabled S3 Bucket IAM Role Access
+3. Dynamically Create Ingress Security Rules
+4. Optionally create all network infrastructure needed for public access
+5. Optionally create public DNS record for the Red Instance
+6. Optionally pass user data into instance creation
+7. Optionally enabled S3 Bucket IAM Role Access
 
-> Contains a useful script for setting up AWS CLI and updating OS packages for
-> both SUSE and Ubuntu Linux.
+## Usage
+
+Self-contained (creates a minimal public VPC) — see
+[`examples/complete`](./examples/complete):
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+module "instance" {
+  source = "RussellGilmore/red-instance/aws"
+
+  project_name  = "my-project"
+  instance_name = "web"
+
+  ingress_rules = [{
+    description = "HTTPS from anywhere"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }]
+}
+```
+
+Connect with: `aws ssm start-session --target <instance_id>`.
+
+To place the instance in an existing network (e.g. red-network), set
+`create_vpc = false` and pass `vpc_id`/`subnet_id` — see
+[`examples/with-network`](./examples/with-network).
 
 <!-- prettier-ignore-start -->
 <!-- BEGIN_TF_DOCS -->
