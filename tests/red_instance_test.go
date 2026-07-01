@@ -3,7 +3,6 @@ package test
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -12,22 +11,26 @@ import (
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
-// TestDNSOnlyFeature tests the Red Instance with only DNS feature enabled
-func TestDNSOnlyFeature(t *testing.T) {
+func getAWSRegion() string {
+	if r := os.Getenv("AWS_REGION"); r != "" {
+		return r
+	}
+	if r := os.Getenv("AWS_DEFAULT_REGION"); r != "" {
+		return r
+	}
+	return "us-east-1"
+}
+
+// Path 1: the module provisions its own network (create_vpc = true).
+func TestRedInstanceCreatesNetwork(t *testing.T) {
 	t.Parallel()
 
-	// Get the current AWS region from environment variable or use default
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-east-1"
-	}
-
-	// Generate a unique project name for the test
-	projectName := fmt.Sprintf("red-dns-%s", strings.ToLower(random.UniqueId()))
+	awsRegion := getAWSRegion()
+	projectName := fmt.Sprintf("red-inst-own-%s", strings.ToLower(random.UniqueId()))
 	instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
 
-	terraformOptions := &terraform.Options{
-		TerraformDir: "./dns-only",
+	opts := &terraform.Options{
+		TerraformDir: "../examples/complete",
 		Vars: map[string]interface{}{
 			"region":        awsRegion,
 			"project_name":  projectName,
@@ -35,55 +38,38 @@ func TestDNSOnlyFeature(t *testing.T) {
 		},
 	}
 
-	// Clean up resources in the end
 	defer test_structure.RunTestStage(t, "teardown", func() {
-		terraform.Destroy(t, terraformOptions)
+		terraform.Destroy(t, opts)
 	})
 
-	// Deploy using Terraform
 	test_structure.RunTestStage(t, "setup", func() {
-		terraform.InitAndApply(t, terraformOptions)
+		terraform.InitAndApply(t, opts)
 	})
 
-	// Validate outputs
 	test_structure.RunTestStage(t, "validate", func() {
-		vpcID := terraform.Output(t, terraformOptions, "vpc_id")
-		subnetID := terraform.Output(t, terraformOptions, "subnet_id")
-		publicIP := terraform.Output(t, terraformOptions, "public_ip")
-		publicDNS := terraform.Output(t, terraformOptions, "public_dns")
+		instanceID := terraform.Output(t, opts, "instance_id")
+		if instanceID == "" || !strings.HasPrefix(instanceID, "i-") {
+			t.Fatalf("Expected an instance ID starting with 'i-', got: %q", instanceID)
+		}
 
-		// Basic validation
-		if vpcID == "" {
-			t.Fatal("Expected VPC ID to be set, but was empty")
-		}
-		if subnetID == "" {
-			t.Fatal("Expected Subnet ID to be set, but was empty")
-		}
-		if publicIP == "Public IP not allocated" {
-			t.Fatal("Expected public IP to be allocated but it was not")
-		}
-		if publicDNS == "Public DNS not allocated" {
-			t.Fatal("Expected public DNS to be set but it was not")
+		publicIP := terraform.Output(t, opts, "public_ip")
+		if publicIP == "Public IP not allocated" || publicIP == "" {
+			t.Fatalf("Expected a public IP, got: %q", publicIP)
 		}
 	})
 }
 
-// TestAllFeaturesEnabled tests the Red Instance with all features enabled
-func TestAllFeaturesEnabled(t *testing.T) {
+// Path 2: the module consumes an externally-provided network
+// (create_vpc = false, vpc_id/subnet_id supplied by the caller).
+func TestRedInstanceUsesExistingNetwork(t *testing.T) {
 	t.Parallel()
 
-	// Get the current AWS region from environment variable or use default
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-east-1"
-	}
-
-	// Generate a unique project name and S3 bucket name for the test
-	projectName := fmt.Sprintf("red-full-%s", strings.ToLower(random.UniqueId()))
+	awsRegion := getAWSRegion()
+	projectName := fmt.Sprintf("red-inst-ext-%s", strings.ToLower(random.UniqueId()))
 	instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
 
-	terraformOptions := &terraform.Options{
-		TerraformDir: "./full-force",
+	opts := &terraform.Options{
+		TerraformDir: "../examples/existing-network",
 		Vars: map[string]interface{}{
 			"region":        awsRegion,
 			"project_name":  projectName,
@@ -91,94 +77,31 @@ func TestAllFeaturesEnabled(t *testing.T) {
 		},
 	}
 
-	// Clean up resources in the end
 	defer test_structure.RunTestStage(t, "teardown", func() {
-		terraform.Destroy(t, terraformOptions)
+		terraform.Destroy(t, opts)
 	})
 
-	// Deploy using Terraform
 	test_structure.RunTestStage(t, "setup", func() {
-		terraform.InitAndApply(t, terraformOptions)
+		terraform.InitAndApply(t, opts)
 	})
 
-	// Validate outputs
 	test_structure.RunTestStage(t, "validate", func() {
-		vpcID := terraform.Output(t, terraformOptions, "vpc_id")
-		subnetID := terraform.Output(t, terraformOptions, "subnet_id")
-		keyName := terraform.Output(t, terraformOptions, "key_name")
-		publicIP := terraform.Output(t, terraformOptions, "public_ip")
-		publicDNS := terraform.Output(t, terraformOptions, "public_dns")
+		instanceID := terraform.Output(t, opts, "instance_id")
+		if instanceID == "" || !strings.HasPrefix(instanceID, "i-") {
+			t.Fatalf("Expected an instance ID starting with 'i-', got: %q", instanceID)
+		}
 
-		// Basic validation
-		if vpcID == "" {
-			t.Fatal("Expected VPC ID to be set, but was empty")
+		// The externally-created VPC must actually exist and be a real VPC.
+		suppliedVPC := terraform.Output(t, opts, "supplied_vpc_id")
+		if !strings.HasPrefix(suppliedVPC, "vpc-") {
+			t.Fatalf("Expected supplied VPC ID starting with 'vpc-', got: %q", suppliedVPC)
 		}
-		if subnetID == "" {
-			t.Fatal("Expected Subnet ID to be set, but was empty")
-		}
-		if keyName == "A Key pair was not created for this instance" {
-			t.Fatal("Expected key pair to be created but it was not")
-		}
-		if publicIP == "Public IP not allocated" {
-			t.Fatal("Expected public IP to be allocated but it was not")
-		}
-		if publicDNS == "Public DNS not allocated" {
-			t.Fatal("Expected public DNS to be set but it was not")
+
+		// When create_vpc = false, the module reports the inherited-network
+		// sentinel rather than creating its own VPC.
+		moduleVPC := terraform.Output(t, opts, "vpc_id")
+		if strings.HasPrefix(moduleVPC, "vpc-") {
+			t.Fatalf("Module appears to have created its own VPC (%q) despite create_vpc = false", moduleVPC)
 		}
 	})
-}
-
-// TestFeatureCombinations tests all of the module's features in various combinations
-func TestFeatureCombinations(t *testing.T) {
-	testDirs := []string{
-		"dns-only",
-		"full-force",
-	}
-
-	// Get the current AWS region from environment variable or use default
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-east-1"
-	}
-
-	for _, dir := range testDirs {
-		// Use a function to create a new variable scope for each iteration
-		func(testDir string) {
-			t.Run(testDir, func(t *testing.T) {
-				t.Parallel()
-
-				// Generate a unique project name for the test
-				projectName := fmt.Sprintf("red-%s-%s", testDir, strings.ToLower(random.UniqueId()))
-				instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
-
-				// Make sure the test directory exists
-				testDirPath := filepath.Join(".", testDir)
-				if _, err := os.Stat(testDirPath); os.IsNotExist(err) {
-					t.Skipf("Test directory %s does not exist, skipping", testDirPath)
-					return
-				}
-
-				terraformOptions := &terraform.Options{
-					TerraformDir: testDirPath,
-					Vars: map[string]interface{}{
-						"region":        awsRegion,
-						"project_name":  projectName,
-						"instance_name": instanceName,
-					},
-				}
-
-				// Clean up resources in the end
-				defer terraform.Destroy(t, terraformOptions)
-
-				// Deploy using Terraform
-				terraform.InitAndApply(t, terraformOptions)
-
-				// Check if vpc_id output exists and is not empty
-				vpcID := terraform.Output(t, terraformOptions, "vpc_id")
-				if vpcID == "" {
-					t.Fatal("Expected VPC ID to be set, but was empty")
-				}
-			})
-		}(dir)
-	}
 }
