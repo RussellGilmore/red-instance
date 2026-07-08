@@ -91,17 +91,17 @@ func TestRedInstanceUsesExistingNetwork(t *testing.T) {
 			t.Fatalf("Expected an instance ID starting with 'i-', got: %q", instanceID)
 		}
 
-		// The externally-created VPC must actually exist and be a real VPC.
 		suppliedVPC := terraform.Output(t, opts, "supplied_vpc_id")
 		if !strings.HasPrefix(suppliedVPC, "vpc-") {
 			t.Fatalf("Expected supplied VPC ID starting with 'vpc-', got: %q", suppliedVPC)
 		}
 
-		// When create_vpc = false, the module reports the inherited-network
-		// sentinel rather than creating its own VPC.
+		// With the output change, the module now echoes the supplied VPC ID.
+		// Assert it matches exactly — proves the instance landed in the
+		// network it was handed, not one the module created.
 		moduleVPC := terraform.Output(t, opts, "vpc_id")
-		if strings.HasPrefix(moduleVPC, "vpc-") {
-			t.Fatalf("Module appears to have created its own VPC (%q) despite create_vpc = false", moduleVPC)
+		if moduleVPC != suppliedVPC {
+			t.Fatalf("Module vpc_id (%q) should equal supplied VPC (%q)", moduleVPC, suppliedVPC)
 		}
 	})
 }
