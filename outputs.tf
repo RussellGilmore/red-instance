@@ -4,13 +4,13 @@ output "instance_id" {
 }
 
 output "vpc_id" {
-  description = "The ID of the created VPC, or a note when an existing VPC was supplied."
-  value       = var.create_vpc ? aws_vpc.main[0].id : "VPC was inherited from another module or resource"
+  description = "The VPC ID the instance is deployed in — created by the module when create_vpc is true, or the supplied vpc_id when false."
+  value       = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
 }
 
 output "subnet_id" {
-  description = "The ID of the created subnet, or a note when an existing subnet was supplied."
-  value       = var.create_vpc ? aws_subnet.public[0].id : "Subnet was inherited from another module or resource"
+  description = "The subnet ID the instance is deployed in — created by the module when create_vpc is true, or the supplied subnet_id when false."
+  value       = var.create_vpc ? aws_subnet.public[0].id : var.subnet_id
 }
 
 output "public_ip" {
