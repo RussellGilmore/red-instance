@@ -142,7 +142,7 @@ No modules.
 | <a name="output_public_dns"></a> [public\_dns](#output\_public\_dns) | The public DNS name of the instance. |
 | <a name="output_public_ip"></a> [public\_ip](#output\_public\_ip) | The public IP address of the instance (EIP when allocated). |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The ID of the instance security group. |
-| <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | The ID of the created subnet, or a note when an existing subnet was supplied. |
-| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the created VPC, or a note when an existing VPC was supplied. |
+| <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | The subnet ID the instance is deployed in — created by the module when create\_vpc is true, or the supplied subnet\_id when false. |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The VPC ID the instance is deployed in — created by the module when create\_vpc is true, or the supplied vpc\_id when false. |
 <!-- END_TF_DOCS -->
 <!-- prettier-ignore-end -->
