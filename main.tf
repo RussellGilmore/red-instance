@@ -25,6 +25,7 @@ data "aws_ami" "red_ami" {
 resource "aws_security_group" "red_sg" {
   vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name   = "${lower(var.instance_name)}-ingress-sg"
+  description = "Ingress rules for ${var.instance_name}; access is via SSM Session Manager"
 
   dynamic "ingress" {
     for_each = var.ingress_rules
