@@ -1,5 +1,5 @@
 # The resources are created conditionally based on the value of the create_vpc variable.
-# Justification: This is for development purposes, Flow Logs and other features are not required for a red instance.
+# Justification: Flow Logs and other features are not required for a red instance.
 # trivy:ignore:AVD-AWS-0178
 resource "aws_vpc" "main" {
   count                = var.create_vpc ? 1 : 0

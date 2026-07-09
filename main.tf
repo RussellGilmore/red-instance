@@ -23,8 +23,8 @@ data "aws_ami" "red_ami" {
 # Justification: ingress is caller-controlled and intended for public services.
 # trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "red_sg" {
-  vpc_id = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
-  name   = "${lower(var.instance_name)}-ingress-sg"
+  vpc_id      = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
+  name        = "${lower(var.instance_name)}-ingress-sg"
   description = "Ingress rules for ${var.instance_name}; access is via SSM Session Manager"
 
   dynamic "ingress" {

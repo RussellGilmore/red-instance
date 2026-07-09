@@ -17,9 +17,8 @@ provider "aws" {
   region = var.region
 }
 
-# A minimal network stood up in the example itself, standing in for any
-# externally-provided VPC (red-network, an existing corporate VPC, etc.).
-# This exercises red-instance's create_vpc = false path.
+# Justification: Flow Logs and other features are not required for a red instance.
+# trivy:ignore:AVD-AWS-0178
 resource "aws_vpc" "this" {
   cidr_block           = "10.20.0.0/16"
   enable_dns_support   = true
@@ -32,6 +31,8 @@ resource "aws_internet_gateway" "this" {
   tags   = { Name = "${var.project_name}-igw" }
 }
 
+# Justification: This is a public subnet for the red instance
+# trivy:ignore:AVD-AWS-0164
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = "10.20.1.0/24"
