@@ -16,12 +16,11 @@ data "aws_ami" "red_ami" {
   owners = [var.ami_owner]
 }
 
-# Security group for the instance.
-# Inbound access is via SSM Session Manager by default — only the ingress
-# rules you explicitly pass are opened. Egress is open so SSM and package
-# updates work.
-# Justification: ingress is caller-controlled and intended for public services.
-# trivy:ignore:AVD-AWS-0107
+# Egress is caller-configurable via var.egress_rules. The default is
+# unrestricted outbound because SSM Session Manager (and OS package
+# updates) require outbound HTTPS, and the SSM service endpoints are not
+# a fixed CIDR range. Consumers with SSM VPC endpoints can narrow this.
+# trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "red_sg" {
   vpc_id      = var.create_vpc ? aws_vpc.main[0].id : var.vpc_id
   name        = "${lower(var.instance_name)}-ingress-sg"
@@ -38,12 +37,15 @@ resource "aws_security_group" "red_sg" {
     }
   }
 
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "egress" {
+    for_each = var.egress_rules
+    content {
+      description = egress.value.description
+      from_port   = egress.value.from_port
+      to_port     = egress.value.to_port
+      protocol    = egress.value.protocol
+      cidr_blocks = egress.value.cidr_blocks
+    }
   }
 
   tags = merge(

@@ -85,6 +85,26 @@ variable "allocate_eip" {
   default     = true
 }
 
+variable "egress_rules" {
+  description = "List of egress rules for the instance security group. Defaults to unrestricted outbound, which SSM Session Manager and OS package updates require. Narrow this if your environment provides SSM VPC endpoints."
+  type = list(object({
+    description = string
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+  default = [
+    {
+      description = "Allow all outbound traffic"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
+
 ####################################################################################################
 # Networking
 variable "create_vpc" {
