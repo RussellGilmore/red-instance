@@ -68,6 +68,86 @@ To place the instance in an existing network (e.g. red-network), set
 `create_vpc = false` and pass `vpc_id`/`subnet_id` — see
 [`examples/with-network`](./examples/with-network).
 
+To use with `red-network`, set `create_vpc = false` and pass
+`vpc_id`/`subnet_id` — below is an example configuration.
+
+```hcl
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
+
+variable "project_name" {
+  type    = string
+  default = "red-networked"
+}
+
+provider "aws" {
+  region = var.region
+}
+
+module "network" {
+  source  = "RussellGilmore/red-network/aws"
+  version = "~> 3.0"
+
+  project_name = var.project_name
+  vpc_name     = "${var.project_name}-vpc"
+  vpc_cidr     = "10.0.0.0/16"
+
+  subnets = {
+    public-1a = {
+      name              = "${var.project_name}-public-1a"
+      cidr_block        = "10.0.1.0/24"
+      availability_zone = "${var.region}a"
+      type              = "public"
+    }
+  }
+}
+
+module "red_instance" {
+  source  = "RussellGilmore/red-instance/aws"
+  version = "~> 3.0"
+
+  project_name  = var.project_name
+  instance_name = "red-networked"
+
+  # Consume the network red-network built.
+  create_vpc = false
+  vpc_id     = module.network.vpc_id
+  subnet_id  = module.network.public_subnet_ids[0]
+
+  # SSM-only access; open just the public service ports.
+  ingress_rules = [
+    {
+      description = "HTTPS from anywhere"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+
+  # egress_rules is omitted, so it defaults to unrestricted outbound
+  # (required for SSM connectivity and OS updates).
+
+  additional_tags = {
+    Environment = "example"
+  }
+}
+
+output "instance_id" {
+  value = module.red_instance.instance_id
+}
+
+output "public_ip" {
+  value = module.red_instance.public_ip
+}
+
+output "vpc_id" {
+  value = module.red_instance.vpc_id
+}
+```
+
 <!-- prettier-ignore-start -->
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
