@@ -23,18 +23,25 @@ brew install aquasecurity/trivy/trivy
 -   IMDSv2 required; root EBS volume encrypted
 -   Instance role limited to `AmazonSSMManagedInstanceCore` plus an optional
     bucket-scoped S3 policy
--   You open only the ingress ports you serve — examples open 80/443, never 22
--   Scanned with Trivy and gitleaks; integration-tested with Terratest
+-   **Ingress and egress are both caller-controlled.** Ingress opens only the
+    ports you pass (examples open 80/443, never 22). Egress defaults to open
+    because SSM and OS updates need it, and can be narrowed via `egress_rules`.
+-   Scanned with Trivy and gitleaks; integration-tested with Terratest across
+    both networking paths (module-created and caller-supplied)
 
 ## Features
 
-1. Gives to ability for create a EC2 Instance
-2. EC2 is already setup for SSM Agent to be installed
-3. Dynamically Create Ingress Security Rules
-4. Optionally create all network infrastructure needed for public access
-5. Optionally create public DNS record for the Red Instance
-6. Optionally pass user data into instance creation
-7. Optionally enabled S3 Bucket IAM Role Access
+-   Provisions an EC2 instance accessed exclusively via AWS SSM Session Manager
+    — no SSH key pair is created or attached
+-   IMDSv2 required and root EBS volume encrypted by default
+-   Dynamically creates ingress security group rules from a caller-supplied list
+-   Configurable egress rules, defaulting to the outbound access SSM and OS
+    updates require
+-   Optionally provisions a minimal public VPC, or drops into an existing
+    network you supply
+-   Optionally creates a public Route 53 DNS record for the instance
+-   Optionally passes a user data script into instance creation
+-   Optionally attaches a bucket-scoped S3 access policy to the instance role
 
 ## Usage
 
