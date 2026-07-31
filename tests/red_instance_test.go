@@ -25,6 +25,8 @@ func getAWSRegion() string {
 func TestRedInstanceCreatesNetwork(t *testing.T) {
 	t.Parallel()
 
+	ctx := t.Context()
+
 	awsRegion := getAWSRegion()
 	projectName := fmt.Sprintf("red-inst-own-%s", strings.ToLower(random.UniqueId()))
 	instanceName := fmt.Sprintf("red-%s", strings.ToLower(random.UniqueId()))
@@ -39,20 +41,20 @@ func TestRedInstanceCreatesNetwork(t *testing.T) {
 	}
 
 	defer test_structure.RunTestStage(t, "teardown", func() {
-		terraform.Destroy(t, opts)
+		terraform.DestroyContext(t, ctx, opts)
 	})
 
 	test_structure.RunTestStage(t, "setup", func() {
-		terraform.InitAndApply(t, opts)
+		terraform.InitAndApplyContext(t, ctx, opts)
 	})
 
 	test_structure.RunTestStage(t, "validate", func() {
-		instanceID := terraform.Output(t, opts, "instance_id")
+		instanceID := terraform.OutputContext(t, ctx, opts, "instance_id")
 		if instanceID == "" || !strings.HasPrefix(instanceID, "i-") {
 			t.Fatalf("Expected an instance ID starting with 'i-', got: %q", instanceID)
 		}
 
-		publicIP := terraform.Output(t, opts, "public_ip")
+		publicIP := terraform.OutputContext(t, ctx, opts, "public_ip")
 		if publicIP == "Public IP not allocated" || publicIP == "" {
 			t.Fatalf("Expected a public IP, got: %q", publicIP)
 		}
@@ -63,6 +65,8 @@ func TestRedInstanceCreatesNetwork(t *testing.T) {
 // (create_vpc = false, vpc_id/subnet_id supplied by the caller).
 func TestRedInstanceUsesExistingNetwork(t *testing.T) {
 	t.Parallel()
+
+	ctx := t.Context()
 
 	awsRegion := getAWSRegion()
 	projectName := fmt.Sprintf("red-inst-ext-%s", strings.ToLower(random.UniqueId()))
@@ -78,28 +82,28 @@ func TestRedInstanceUsesExistingNetwork(t *testing.T) {
 	}
 
 	defer test_structure.RunTestStage(t, "teardown", func() {
-		terraform.Destroy(t, opts)
+		terraform.DestroyContext(t, ctx, opts)
 	})
 
 	test_structure.RunTestStage(t, "setup", func() {
-		terraform.InitAndApply(t, opts)
+		terraform.InitAndApplyContext(t, ctx, opts)
 	})
 
 	test_structure.RunTestStage(t, "validate", func() {
-		instanceID := terraform.Output(t, opts, "instance_id")
+		instanceID := terraform.OutputContext(t, ctx, opts, "instance_id")
 		if instanceID == "" || !strings.HasPrefix(instanceID, "i-") {
 			t.Fatalf("Expected an instance ID starting with 'i-', got: %q", instanceID)
 		}
 
-		suppliedVPC := terraform.Output(t, opts, "supplied_vpc_id")
+		suppliedVPC := terraform.OutputContext(t, ctx, opts, "supplied_vpc_id")
 		if !strings.HasPrefix(suppliedVPC, "vpc-") {
 			t.Fatalf("Expected supplied VPC ID starting with 'vpc-', got: %q", suppliedVPC)
 		}
 
-		// With the output change, the module now echoes the supplied VPC ID.
+		// With the output change, the module echoes the supplied VPC ID.
 		// Assert it matches exactly — proves the instance landed in the
 		// network it was handed, not one the module created.
-		moduleVPC := terraform.Output(t, opts, "vpc_id")
+		moduleVPC := terraform.OutputContext(t, ctx, opts, "vpc_id")
 		if moduleVPC != suppliedVPC {
 			t.Fatalf("Module vpc_id (%q) should equal supplied VPC (%q)", moduleVPC, suppliedVPC)
 		}
