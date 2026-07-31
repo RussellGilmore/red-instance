@@ -2,8 +2,9 @@
 
 ## [![Red EC2 Module](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml/badge.svg?branch=main)](https://github.com/RussellGilmore/red-instance/actions/workflows/module-test.yml)
 
-A practical EC2 module — **SSM-only by design**. No SSH keys are created,
-stored, or attached; you reach the instance through AWS Session Manager.
+Launch a working EC2 instance with one module call — it can build its own
+network, wires up an IAM role, and is reachable immediately through AWS Session
+Manager. No SSH keys, no bastion, no manual setup.
 
 **Requirements:**
 
